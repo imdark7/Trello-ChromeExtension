@@ -53,6 +53,10 @@ async function commentEditingSaveButtonHandler(commentInfo, newText) {
     commentEditingCancelButtonHandler();
     await updateTrelloCardComment(commentInfo.id, newText);
     refreshPopup();
+    if (commentInfo.text.includes(eventsDictionary.endOfTestingDate)){
+        await updateTrelloCardComment(doesTheCommentExist('Баги').id, 'Баги: ' + await getCardBugAmount());
+        await updateTrelloCardComment(doesTheCommentExist('Участники').id, 'Участники: '+ await getCardMembersString())
+    }
 }
 
 function commentEditingCancelButtonHandler() {
@@ -70,6 +74,8 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText){
     commentEditingCancelButtonHandler();
     await addTrelloCardComment(await cardIdPromise, commentText);
     refreshPopup();
+    await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
+    await addTrelloCardComment(await cardIdPromise, 'Участники: '+ await getCardMembersString());
 }
 
 //Доавление ревьюеров

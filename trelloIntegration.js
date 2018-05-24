@@ -76,6 +76,45 @@
       }
   }
 
+  async function getCardBugAmount(){
+    var cardId = document.URL.split("/")[4];
+    var options = {
+        method: "GET"
+    }
+    var getCardChecklist = 'https://api.trello.com/1/cards/' + cardId + '/checklists' +
+          '?key=' + apiKey +
+          '&token=' + apiToken;
+    var checklists = await fetch(getCardChecklist, options).then((resp) => resp.json())
+        .then(function(data) {
+            return data;
+        });
+    var list = checklists.find((l) => (l.name.toLowerCase() == 'bugs' || l.name.toLowerCase() == 'баги'));
+    return Object.is(list, undefined) ? 0 : list.checkItems.length;
+}
+
+async function getCardMembersString(){
+    var cardId = document.URL.split("/")[4];
+    var options = {
+        method: "GET"
+    }
+    var getMembers = 'https://api.trello.com/1/cards/' + cardId + '/actions' +
+          '?filter=addMemberToCard' +
+          '&fields=member' +
+          '&member_fields=username' +
+          '&memberCreator=false' +
+          '&key=' + apiKey +
+          '&token=' + apiToken;
+    var str = '';
+    var members = await fetch(getMembers, options).then((resp) => resp.json())
+        .then(function(data) {
+            return data;
+        });
+    members.forEach(element => {
+        str += ' ' + element.member.username + ';';
+    });
+    return str;
+}
+
   async function getCardsActions() {
       var serviceCardId = await findServiceCard();
       if (serviceCardId != null) {
