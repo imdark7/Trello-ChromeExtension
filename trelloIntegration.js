@@ -39,15 +39,30 @@
           })
       return testers;
   }
-
+async function getCardAndBoardNames(cardId){
+	      var options = {
+          method: "GET"
+      };
+	   var getCardAndBoardNamesUrl = 'https://api.trello.com/1/cards/'+cardId+
+	   '?fields=name&board=true&board_fields=name'+
+          '&key=' + apiKey +
+          '&token=' + apiToken;
+		   var names = await fetch(getCardAndBoardNamesUrl , options).then((resp) => resp.json())
+          .then(function(data) {
+              return "Карточка: "+ data.name +"; Доска: "+ data.board.name;
+          })
+		  return names;	  
+}
   async function createCardOnServiceBoard() {
       var cardId = document.URL.split("/")[4];
+	  var cardDesc= await getCardAndBoardNames(cardId);
       var options = {
           method: "POST"
       };
       var createCardOnServiceBoardUrl = 'https://api.trello.com/1/cards' +
           '?name=' + cardId +
           '&idList=' + inProgressListId +
+		  '&desc=' + cardDesc +
           '&key=' + apiKey +
           '&token=' + apiToken;
       var newCardId = await fetch(createCardOnServiceBoardUrl, options).then((resp) => resp.json())
@@ -100,7 +115,7 @@ async function getCardMembersString(){
     var getMembers = 'https://api.trello.com/1/cards/' + cardId + '/actions' +
           '?filter=addMemberToCard' +
           '&fields=member' +
-          '&member_fields=username' +
+          '&member_fields=fullName' +
           '&memberCreator=false' +
           '&key=' + apiKey +
           '&token=' + apiToken;
@@ -110,7 +125,7 @@ async function getCardMembersString(){
             return data;
         });
     members.forEach(element => {
-        str += ' ' + element.member.username + ';';
+        str += ' ' + element.member.fullName + ';';
     });
     return str;
 }
