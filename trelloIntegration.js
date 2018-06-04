@@ -112,21 +112,29 @@ async function getCardMembersString(){
     var options = {
         method: "GET"
     }
-    var getMembers = 'https://api.trello.com/1/cards/' + cardId + '/actions' +
-          '?filter=addMemberToCard' +
-          '&fields=member' +
-          '&member_fields=fullName' +
-          '&memberCreator=false' +
+    var getMembers = 'https://api.trello.com/1/cards/' + cardId + '?fields=none' +
+		  '&actions=addMemberToCard,removeMemberFromCard' +
+          '&action_fields=member' +
+          '&action_member_fields=fullName' +
+          '&action_memberCreator=false' +
+		  '&members=true' +
+		  '&member_fields=fullName' +
           '&key=' + apiKey +
           '&token=' + apiToken;
     var str = '';
-    var members = await fetch(getMembers, options).then((resp) => resp.json())
+    var response = await fetch(getMembers, options).then((resp) => resp.json())
         .then(function(data) {
             return data;
         });
-    members.forEach(element => {
-        str += ' ' + element.member.fullName + ';';
+    response.members.forEach(element => {
+        str += element.fullName + '; ';
     });
+	 response.actions.forEach(element => {
+		 if (str.indexOf(element.member.fullName) <0){
+				str += element.member.fullName + '; ';
+		 }
+    });
+	
     return str;
 }
 
