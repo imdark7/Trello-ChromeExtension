@@ -26,7 +26,7 @@ async function submitPopupHandler() {
                 serviceCardId = await createCardOnServiceBoard();
             }
             await addTrelloCardComment(serviceCardId, commentText);
-            refreshPopup();
+           await refreshPopup();
         } else {
             var serviceCardIdPromise = findServiceCard();
             if ($('#readyForTestingDate p').length > 0) {
@@ -36,7 +36,7 @@ async function submitPopupHandler() {
                     setButtonsDisabledState(true);
                     showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
                     await addTrelloCardComment(await serviceCardIdPromise, commentText);
-                    refreshPopup();
+                   await refreshPopup(true);
                 }
             } else {
                 $('#error-message').text('Карточка недоступна для редактирования');
@@ -73,21 +73,21 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText){
     showComment(getKeyByValue(eventsDictionary, parsedComment[0]), parsedComment[1])
     commentEditingCancelButtonHandler();
     await addTrelloCardComment(await cardIdPromise, commentText);
-    refreshPopup();
+    await refreshPopup();
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
     await addTrelloCardComment(await cardIdPromise, 'Участники: '+ await getCardMembersString());
 }
 
-//Доавление ревьюеров
+//Добавление ревьюеров
 function addReviwersButtonHandler() {
     showFirstAndHideSecondBlock('check-list-review-block', 'testing-dates-input-block');
     $("#reviewers-error-message").text('');
 }
 
-function addReviewerCancelButtonHandler() {
+async function addReviewerCancelButtonHandler() {
+	 await refreshPopup(true);
     showFirstAndHideSecondBlock('testing-dates-input-block', 'check-list-review-block')
 }
-
 async function addReviewerSubmitButtonHandler() {
     setButtonsDisabledState(true);
     var reviewer = $('#testing-reviewers-dropdown').val(); 
@@ -111,6 +111,66 @@ async function addReviewerSubmitButtonHandler() {
     }
     refreshReviewersInfo();
 }
+//Автоматизация
+function automationButtonHandler(){
+	showFirstAndHideSecondBlock('automation-block', 'testing-dates-input-block');
+	showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
+	automationPopupStep = 1;
+}
+
+async function automationSubmitButtonHandler(){
+	  
+	var automationDropdownValue=$('#automation-dropdown').val();
+	var lackOfAutomationDropdownValue=$('#lack-of-automation-reasons-dropdown').val();
+	if (automationPopupStep == 1){
+		if (automationDropdownValue == 'Полностью покрыли функтестами')
+		{
+		setButtonsDisabledState(true);
+		 await addComment("Автоматизация: ", automationDropdownValue);
+         await addComment("Причины недостаточной автоматизации: ","");		
+		setButtonsDisabledState(false);		 
+		  		  refreshPopup(true);
+		}
+		else
+		showFirstAndHideSecondBlock('lack-of-automation-info','automation-info');
+		automationPopupStep = 2;
+	}
+	else {
+		setButtonsDisabledState(true);
+		await addComment("Автоматизация: ", automationDropdownValue);
+         await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);	
+		  setButtonsDisabledState(false);
+		 await refreshPopup(true);
+	}
+	}
+	
+async function addComment(prefix, value){
+	   cardActions = await getCardsActions();
+			var commentInfo = doesTheCommentExist(prefix);
+			if(commentInfo){
+			await updateTrelloCardComment(commentInfo.id, prefix + value);
+			}
+			else {
+				var serviceCardId = await findServiceCard();
+				if (!serviceCardId) {
+					serviceCardId = await createCardOnServiceBoard();
+        }
+        await addTrelloCardComment(serviceCardId ,prefix + value);
+    }
+}
+
+function automationCancelButtonHandler(){
+	if (automationPopupStep == 1){
+		showFirstAndHideSecondBlock('testing-dates-input-block','automation-block');	
+	}
+	else 
+	{
+		showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
+		automationPopupStep = 1
+		}
+}
+
+
 
 async function removeReviewerIconHandler(tester) {
     $('#current-reviewers-block').find($(`div:contains(${tester})`)).hide();
@@ -137,5 +197,7 @@ function setButtonsDisabledState(isDisable){
     $('#add-reviewer-submit-button').prop('disabled', isDisable);
     $('#ext-popup-submit').prop('disabled', isDisable);
     $('#comment-editing-save-button').prop('disabled', isDisable);
+	$('#comment-editing-save-button').prop('disabled', isDisable);
+	$('#automation-submit-button').prop('disabled', isDisable);
 }
 
