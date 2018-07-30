@@ -83,7 +83,7 @@ function addInfoFromServiveCardBlocks(parentBlockId, blocksInfoArray) {
         var commentBlock = $('<div>', {
             id: key,
             css : {
-                width: '280px',
+                width: '375px',
                 minHeight: '30px',
                 display: 'none',
                 borderBottom: '1px solid #d6dadc'
@@ -143,6 +143,7 @@ async function showPopup() {
     var child = document.getElementById("ext-popup-container");
     child.style.left = el.x + 'px';
     child.style.top = el.y + el.height + 6 + 'px';
+	await refreshPopup(false)
     showBlock("ext-popup");
 }
 
@@ -151,7 +152,7 @@ async function addExistingComment(eventType, blockId) {
     if (cardInfo) {
         var splitedText = cardInfo["text"].split(': ');
 		if(splitedText[1]!=undefined && splitedText[1]!=""){
-        $(`#${blockId}`).html('<b>' + splitedText[0] + ':</b><p align="center">' + splitedText[1] + '</p>')
+        $(`#${blockId}`).html('<b>' + splitedText[0] + ':</b>  ' + splitedText[1] )
         showBlock(blockId)
 		}
 		else hideBlock(blockId);
