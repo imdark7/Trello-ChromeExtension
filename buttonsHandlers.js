@@ -1,4 +1,14 @@
 //Сохранение даты события
+function addDatesInfoButtonHandler() {
+	hideBlock('automation-block');
+	hideBlock('problems-block');
+	hideBlock('check-list-review-block');
+	showBlock('save-comment-block');
+	showBlock('testing-dates-input-block');
+
+    $("#error-message").text('');
+}
+
 async function submitPopupHandler() {
     var dateString = $('#date-time-input').val();
     if (dateString == "") {
@@ -14,13 +24,13 @@ async function submitPopupHandler() {
     }
     
     var commentText = eventType + ": " + dateTime.toFullDateString();
-    if ($(`#${getKeyByValue(eventsDictionary, eventType)} p`).length > 0) {
+    if ($(`#${getKeyByValue(eventsDictionary, eventType)}`).length > 0) {
         var commentInfo = doesTheCommentExist(eventType);
         showEditingConfirmationButtons(commentInfo, commentText);
     } else {
         if (eventType == eventsDictionary.readyForTestingDate) {
             setButtonsDisabledState(true);
-            showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
+           // showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
             var serviceCardId = await findServiceCard();
             if (!serviceCardId) {
                 serviceCardId = await createCardOnServiceBoard();
@@ -29,7 +39,7 @@ async function submitPopupHandler() {
            await refreshPopup();
         } else {
             var serviceCardIdPromise = findServiceCard();
-            if ($('#readyForTestingDate p').length > 0) {
+            if ($('#readyForTestingDate').length > 0) {
                 if (eventType == "Закончили тестирование") {
                     showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText);
                 } else {
@@ -77,10 +87,22 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText){
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
     await addTrelloCardComment(await cardIdPromise, 'Участники: '+ await getCardMembersString());
 }
-
+//Добавление проблем с тачками
+function addProblemsInfoButtonHandler() {
+hideBlock('testing-dates-input-block');
+	hideBlock('automation-block');
+	showBlock('problems-block');
+	hideBlock('check-list-review-block');
+}
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
+	hideBlock('testing-dates-input-block');
+	hideBlock('automation-block');
+	hideBlock('problems-block');
+	showBlock('check-list-review-block');
+
     showFirstAndHideSecondBlock('check-list-review-block', 'testing-dates-input-block');
+	
     $("#reviewers-error-message").text('');
 }
 
@@ -113,7 +135,11 @@ async function addReviewerSubmitButtonHandler() {
 }
 //Автоматизация
 function automationButtonHandler(){
-	showFirstAndHideSecondBlock('automation-block', 'testing-dates-input-block');
+	hideBlock('check-list-review-block');
+	hideBlock('testing-dates-input-block');
+	hideBlock('problems-block');
+	showBlock('automation-block');
+	hideBlock('automation-cancel-button');
 	showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
 	automationPopupStep = 1;
 }
@@ -132,6 +158,7 @@ async function automationSubmitButtonHandler(){
 		  		  refreshPopup(true);
 		}
 		else
+			showBlock('automation-cancel-button');
 		showFirstAndHideSecondBlock('lack-of-automation-info','automation-info');
 		automationPopupStep = 2;
 	}
@@ -160,14 +187,9 @@ async function addComment(prefix, value){
 }
 
 function automationCancelButtonHandler(){
-	if (automationPopupStep == 1){
-		showFirstAndHideSecondBlock('testing-dates-input-block','automation-block');	
-	}
-	else 
-	{
 		showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
-		automationPopupStep = 1
-		}
+		hideBlock('automation-cancel-button');
+		automationPopupStep = 1;
 }
 
 

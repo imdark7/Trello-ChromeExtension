@@ -45,10 +45,12 @@ async function placePopup() {
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }
+			$('#add-test-stands-problem-info').click(()=>addProblemsInfoButtonHandler());
             $('#ext-popup-close').click(() => hidePopup());
-			 $('#add-automation-info').click(() => automationButtonHandler());
-			 $('#automation-submit-button').click(() => automationSubmitButtonHandler());
-			  $('#automation-cancel-button').click(() => automationCancelButtonHandler());
+			$('#add-dates-info').click(() => addDatesInfoButtonHandler())
+			$('#add-automation-info').click(() => automationButtonHandler());
+			$('#automation-submit-button').click(() => automationSubmitButtonHandler());
+			$('#automation-cancel-button').click(() => automationCancelButtonHandler());
             $('#ext-popup-submit').click(() => submitPopupHandler());
             $('#add-reviewers').click(() => addReviwersButtonHandler());
             $('#add-reviewer-cancel-button').click(() => addReviewerCancelButtonHandler());

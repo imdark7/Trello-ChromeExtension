@@ -1,72 +1,72 @@
-<div id="ext-popup" style="display: none; min-width:400px; overflow: scroll">
-    <div id="ext-popup-container" class="pop-over is-shown" style="min-width:400px;" >
-        <div class="pop-over-header js-pop-over-header" style="min-width:400px;" >
-            <span class="pop-over-header-title">Сроки тестирования</span>
-            <a id="ext-popup-close" href="javascript:void(0);" class="pop-over-header-close-btn icon-sm icon-close"></a>
-        </div>
-        <div class="pop-over-content js-pop-over-content u-fancy-scrollbar js-tab-parent" style="max-height: 818px;">
-            <div id='testing-dates-input-block'>
-                <div>
-                    <form class="dpicker-widget u-clearfix">
-                        <div class="datepicker-select u-clearfix">
-                            <div class="datepicker-select-date" style='width:auto'>
-                                <label class="datepicker-select-label">Дата и Время</label>
-                                <input id="date-time-input" class="datepicker-select-input js-dpicker-date-input js-autofocus" type="datetime-local">
-                            </div>
-                        </div>
-                    </form>
-                    <span>
+<div id="ext-popup" style="display: none; min-width:470px; overflow: scroll">
+   <div id="ext-popup-container" class="pop-over is-shown" style="min-width:470px;" >
+      <div class="pop-over-header js-pop-over-header" style="min-width:470px;" >
+         <span class="pop-over-header-title">Сроки тестирования</span>
+         <a id="ext-popup-close" href="javascript:void(0);" class="pop-over-header-close-btn icon-sm icon-close"></a>
+      </div>
+      <div class="pop-over-content js-pop-over-content u-fancy-scrollbar js-tab-parent" style="max-height: 818px;">
+         <div id="tabs-block" style = "min-height:45px; border-bottom: 1px solid rgb(214, 218, 220)">
+            <input id="add-reviewers" style="min-width:10px; display:inline;" class="primary wide confirm" type="submit" value="Ревью"><input id="add-automation-info" style="min-width:10px; display:inline;" class="primary wide confirm" type="submit" value="Автотесты"><input id="add-dates-info" style="min-width:10x; display:inline;" class="primary wide confirm" type="submit" value="Сроки"><input id="add-test-stands-problem-info" style="min-width:92px; display:inline;" class="primary wide confirm" type="submit" value="Проблемы">
+		</div>
+         <div id='testing-dates-input-block' style="height:200px; border-bottom: 1px solid #d6dadc">
+            <div>
+               <form class="dpicker-widget u-clearfix">
+                  <div class="datepicker-select u-clearfix">
+                     <div class="datepicker-select-date" style='width:auto'>
+                        <label class="datepicker-select-label">Дата и Время</label>
+                        <input id="date-time-input" class="datepicker-select-input js-dpicker-date-input js-autofocus" type="datetime-local">
+                     </div>
+                  </div>
+               </form>
+               <span>
                <select id="events-dropdown" class="js-checklist">                    
                </select>
                </span>
-                </div>
-                <div id="save-comment-block" class="datepicker-confirm-btns" style="display:inline; min-height:112px;">
-                    <div style = " borderBottom: '1px solid #d6dadc'"><input id="ext-popup-submit" style="min-width:375px;" class="primary wide confirm" type="submit" value="Сохранить"></div>
-					<div id="error-message" style="font-weight: bold; color:red; margin: 10px;"></div>
-					            <span class="pop-over-header-title"></span>
-					<input id="add-reviewers" style="min-width:184px; display:inline;" class="primary wide confirm" type="submit" value="Ревью"><input id="add-automation-info" style="min-width:184px; display:inline;" class="primary wide confirm" type="submit" value="Автотесты">
-    
-                </div>
-                <div id="edit-comment-confirmation-block" style="min-height:80px;display:none;">
-                    <div id="confirm-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
-                    <input id="comment-editing-save-button" class="primary wide confirm" type="submit" value="Подтвердить">
-                    <input id="comment-editing-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Отмена">
-                </div>
-                <div id='existingCommentsBlock' style="width:375px;border-top: 1px solid #d6dadc">
-				 <span class="pop-over-header-title"  align="center">Сводка</span>
-                </div>
             </div>
-            <div id="check-list-review-block" style="display:none;">
-                <div>
-                    <label class="datepicker-select-label">Ревьюер:</label> 
-					<select id="testing-reviewers-dropdown" class="js-checklist">
-					</select>    
-                    <div style="display: inline-block;">
-                        <input id="add-reviewer-submit-button" class="primary wide confirm" type="submit" value="Добавить">
-                        <input id="add-reviewer-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Назад">
-                        <div id="reviewers-error-message" style="font-weight: bold; color:red; margin: 10px"></div>
-                    </div>
-                </div>
-                <div id='current-reviewers-block' style="width:280px; border-top: 1px solid #d6dadc">
-
-                </div>
+            <div id="save-comment-block"  style="display:inline; min-height:112px;">
+            <input id="ext-popup-submit" style="min-width:375px;" class="primary wide confirm" type="submit" value="Сохранить">
+               <div id="error-message" style="font-weight: bold; color:red; margin: 10px;"></div>
             </div>
-			   <div id="automation-block" style="display:none;">
-                <div id="automation-info" style="display:none;" >
-                    <label class="datepicker-select-label">Автоматизация задачи: </label> 
-					<select id="automation-dropdown" class="js-checklist">
-					</select>
-				</div>	
-				 <div id="lack-of-automation-info" style="display:none;">
-					<label class="datepicker-select-label">Причичны недостаточной автоматизации: </label> 				 
-					<select id="lack-of-automation-reasons-dropdown" class="js-checklist">
-					</select> 
-				 </div>	
-                    <div style="display: inline-block;">
-                        <input id="automation-submit-button" class="primary wide confirm" type="submit" value="Продолжить">
-                        <input id="automation-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Назад">
-                    </div>             
-                </div>
+            <div id="edit-comment-confirmation-block" style="min-height:80px;display:none;">
+               <div id="confirm-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
+               <input id="comment-editing-save-button" class="primary wide confirm" type="submit" value="Подтвердить">
+               <input id="comment-editing-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Отмена">
             </div>
-        </div>
-    </div>
+         </div>
+         <div id="check-list-review-block" style="min-height:200px" style="display:none;">
+            <div>
+               <label class="datepicker-select-label">Ревьюер:</label> 
+               <select id="testing-reviewers-dropdown" class="js-checklist">
+               </select>    
+               <div style="display: inline-block; border-bottom: 1px solid #d6dadc">
+                  <input id="add-reviewer-submit-button" style="min-width:180px;display:inline;" class="primary wide confirm" type="submit" value="Добавить">
+                  <div id="reviewers-error-message" style="font-weight: bold; color:red; margin: 10px"></div>
+               </div>
+            </div>
+            <div id='current-reviewers-block' style="width:375px;">
+            </div>
+         </div>
+         <div id="automation-block" style="height:199px;display:none; border-bottom: 1px solid #d6dadc">
+            <div id="automation-info" style="display:none;" >
+               <label class="datepicker-select-label">Автоматизация задачи: </label> 
+               <select id="automation-dropdown" class="js-checklist">
+               </select>
+            </div>
+            <div id="lack-of-automation-info" style="display:none;">
+               <label class="datepicker-select-label">Причичны недостаточной автоматизации: </label> 				 
+               <select id="lack-of-automation-reasons-dropdown" class="js-checklist">
+               </select> 
+            </div>
+            <div style="display: inline-block;">
+               <input id="automation-submit-button" class="primary wide confirm" type="submit" value="Продолжить">
+               <input id="automation-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Назад">
+            </div>
+         </div>
+		 <div id="problems-block" style="height:199px;display: none; border-bottom: 1px solid #d6dadc">
+		 </div>
+         <div id='existingCommentsBlock' style="width:375px;">
+            <span class="pop-over-header-title"  align="center">Сводка</span>
+         </div>
+      </div>
+   </div>
+</div>
