@@ -15,7 +15,7 @@ async function placePopup() {
             addInfoFromServiveCardBlocks('current-reviewers-block', testersList);
             addDropdownOptions('problems-dropdown', [otherProblemValue]);
             addDropdownOptions('problems-dropdown', testStandProblemsList);
-            addDropdownOptions('test-stands-dropdown', testStandsDictionary);
+            addDropdownOptions('test-stands-dropdown', testStandsNums);
             addDropdownOptions('testing-reviewers-dropdown', testersList);
             addDropdownOptions('automation-dropdown', automationInfoDictionary);
             addDropdownOptions('lack-of-automation-reasons-dropdown', lackOfAutomationReasonsDictionary);
@@ -76,27 +76,6 @@ function addInfoFromServiveCardBlocks(parentBlockId, blocksInfoArray) {
     }
 }
 
-async function refreshReviewersInfo() {
-    var commentInfo = doesTheCommentExist("Ревью: ");
-    $("#reviewers-error-message").text('');
-    for (var id in testersList) {
-        if (commentInfo && commentInfo[0].text.includes(testersList[id])) {
-            showBlock(id);
-        } else {
-            hideBlock(id);
-        }
-    }
-    setButtonsDisabledState(false);
-}
-
-function addRemovingButtonsForReviewer(id) {
-    $(`#${id}`).append($('<a>', {
-        id: id + '-close-icon',
-        click: () => removeReviewerIconHandler(testersList[id]),
-        class: 'icon-sm icon-close'
-    }))
-}
-
 async function refreshPopup(needFetchActions, commentToRefresh) {
     if (needFetchActions) {
         cardActions = await getCardsActions()
@@ -135,110 +114,6 @@ async function showPopup() {
     showProblems();
     showMembers();
     showBlock("ext-popup");
-}
-
-function showExistingProblem(problems) {
-    block = $("#existing-problems-block");
-    for (var i = 0; i < problems.length; i++) {
-        var s = "dasda";
-        var q = $(`#${s}`)
-        if ($(`#${problems[i].id}`).length) continue;
-        var problemMessageHtml = parseProblemComment(problems[i].text)
-        var commentBlock = $('<div>', {
-            id: problems[i].id,
-            css: {
-                width: '100%',
-                minHeight: '30px',
-                display: 'inline-block',
-                borderTop: '1px solid #d6dadc'
-            }
-        }).html(problemMessageHtml);
-        block.append(commentBlock);
-        addRemovingButtonForProblem(problems[i].id);
-    }
-}
-
-function addRemovingButtonForProblem(id) {
-    $(`#${id}`).append($('<a>', {
-        id: id + '-close-icon',
-        click: () => removeProblemIconHandler(id),
-        class: 'icon-sm icon-close',
-        css: {
-            verticalAlign: '80%',
-            Align: 'right'
-        }
-    }))
-}
-
-
-async function showProblems() {
-    cardActions = await getCardsActions();
-    var problems = await doesTheCommentExist("Проблема: ");
-    if (problems) {
-        showBlock('current-problems-header');
-        showExistingProblem(problems);
-    } else hideBlock('current-problems-header');
-}
-
-async function showMembers() {
-    cardActions = await getCardsActions();
-    var members = await doesTheCommentExist("Участники: ");
-    if (members) {
-        showBlock('current-members-block-header');
-        showExistingMembers(members[0]);
-    } else hideBlock('current-members-block-header');
-}
-
-function showExistingMembers(membersComment) {
-    block = $("#current-members-block");
-    $("#current-members-block").empty();
-    var membersArray = membersComment.text.replace("Участники: ", "").split("; ");
-    for (var i = 0; i < membersArray.length; i++) {
-        if (membersArray[i] == "") continue;
-        var memberBlock = $('<div>', {
-            id: 'member-' + i,
-            css: {
-                width: '100%',
-                minHeight: '30px',
-                display: 'inline-block',
-                borderTop: '1px solid #d6dadc'
-            }
-        }).html($('<div>', {
-            css: {
-                display: 'inline-block',
-                width: '90%',
-                verticalAlign: 'middle'
-            }
-        }).html($('<b>').text(membersArray[i].trim())));
-        block.append(memberBlock);
-        addRemovingButtonForMember(i, membersArray[i], membersComment);
-    }
-}
-
-function addRemovingButtonForMember(blockNum, nameToRemove, comment) {
-    {
-        $("#member-" + blockNum).append($('<a>', {
-            id: 'member-' + blockNum + '-close-icon',
-            click: () => removeMember(blockNum, nameToRemove, comment),
-            class: 'icon-sm icon-close',
-            css: {
-                display: 'inline-block',
-                marginTop: '15px'
-            }
-        }))
-    }
-}
-
-
-function parseProblemComment(text) {
-    var parsed = text.replace("Проблема:", "").trim().split(';');
-    var result = "";
-    result += "<div style=\"width:90%;display:inline-block\"><b>Стенд: </b>" + parsed[0].split(":")[1].trim() +
-        "</br><b>Проблема: </b>" + parsed[1].split(":")[1].trim();
-    var comment = parsed[2].split(":")[1].trim();
-    if (comment != "")
-        result += "</br><b>Комментарий: </b>" + comment;
-    return result + "</div>";
 }
 
 async function addExistingComment(eventType, blockId) {
@@ -299,4 +174,15 @@ function hideBlock(blockToHideId) {
 
 function getKeyByValue(obj, value) {
     return Object.keys(obj).find(key => obj[key] === value);
+}
+
+function showActiveTab(activeTabId){
+	tabsIds.forEach(function(tabId){
+		if (tabId==activeTabId){
+			 showBlock(tabId);
+		}
+		else {
+			 hideBlock(tabId);
+		}
+	})
 }

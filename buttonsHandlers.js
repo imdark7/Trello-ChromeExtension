@@ -1,12 +1,8 @@
 //Сохранение даты события
 function addDatesInfoButtonHandler() {
-    hideBlock('automation-block');
-    hideBlock('problems-block');
-    hideBlock('check-list-review-block');
-    hideBlock('card-members-edit-block');
+	showActiveTab('testing-dates-input-block');
     showBlock('save-comment-block');
-    showBlock('testing-dates-input-block');
-
+	hideBlock('edit-comment-confirmation-block');
     $("#error-message").text('');
 }
 
@@ -92,13 +88,10 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
 
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
-    hideBlock('testing-dates-input-block');
-    hideBlock('automation-block');
-    hideBlock('card-members-edit-block');
-    showBlock('problems-block');
-    showFirstAndHideSecondBlock("fill-problems-info-block", "add-new-problem-block");
+	showActiveTab('problems-block');
+	showBlock('fill-problems-info-block');
+    hideBlock ("add-new-problem-block");
     hideBlock('problems-block-cancel-button');
-    hideBlock('check-list-review-block');
     $("#new-problem-error-message").text('');
     standProblemsTabStep = 1;
 }
@@ -116,9 +109,6 @@ async function addProblemsInfoSubmitButtonHandler() {
         } else {
             $("#new-problem-error-message").text('');
             setButtonsDisabledState(true);
-
-
-
             var serviceCardId = await findServiceCard();
             if (!serviceCardId) {
                 serviceCardId = await createCardOnServiceBoard();
@@ -127,8 +117,6 @@ async function addProblemsInfoSubmitButtonHandler() {
             showProblems();
             setButtonsDisabledState(false);
         }
-
-
     } else {
         var newProblemDescription = $('#new-problem-input').val();
         if (newProblemDescription == "") {
@@ -149,7 +137,6 @@ async function addProblemsInfoSubmitButtonHandler() {
         if (Object.values(testStandProblemsList).indexOf(newProblemDescription) == -1 || newProblemDescription == otherProblemValue) {
             await addNewTestStandProblemsType(newProblemDescription);
         }
-
         setButtonsDisabledState(false);
 
     }
@@ -172,14 +159,7 @@ async function removeProblemIconHandler(id) {
 
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
-    hideBlock('testing-dates-input-block');
-    hideBlock('automation-block');
-    hideBlock('problems-block');
-    hideBlock('card-members-edit-block');
-    showBlock('check-list-review-block');
-
-    showFirstAndHideSecondBlock('check-list-review-block', 'testing-dates-input-block');
-
+    showActiveTab('check-list-review-block');
     $("#reviewers-error-message").text('');
 }
 
@@ -229,13 +209,10 @@ function getActiveReviewers() {
 
 //Автоматизация
 function automationButtonHandler() {
-    hideBlock('check-list-review-block');
-    hideBlock('testing-dates-input-block');
-    hideBlock('problems-block');
-    hideBlock('card-members-edit-block');
-    showBlock('automation-block');
+    showActiveTab('automation-block');
     hideBlock('automation-cancel-button');
-    showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
+    showBlock('automation-info');
+	hideBlock('lack-of-automation-info');
     automationPopupStep = 1;
 }
 
@@ -286,36 +263,21 @@ function automationCancelButtonHandler() {
 }
 /////////////////
 
-
-
 function setButtonsDisabledState(isDisable) {
-    var blocks = $('#current-reviewers-block').find($('a'));
-    isDisable ? blocks.hide() : blocks.show();
-    var problemsRemoveButtons = $('#existing-problems-block').find($('a'));
-    isDisable ? problemsRemoveButtons.hide() : problemsRemoveButtons.show();
-    var membersRemoveButtons = $('#current-members-block').find($('a'));
-    isDisable ? membersRemoveButtons.hide() : membersRemoveButtons.show();
-    $('#add-reviewer-submit-button').prop('disabled', isDisable);
-    $('#ext-popup-submit').prop('disabled', isDisable);
-    $('#comment-editing-save-button').prop('disabled', isDisable);
-    $('#comment-editing-save-button').prop('disabled', isDisable);
-    $('#automation-submit-button').prop('disabled', isDisable);
-    $('#automation-cancel-button').prop('disabled', isDisable);
-    $('#problems-block-submit-button').prop('disabled', isDisable);
-    $('#problems-block-cancel-button').prop('disabled', isDisable);
-    $('#pull-members-from-card').prop('disabled', isDisable);
-
+	
+	tabsIds.forEach(function(id){
+		 var buttons= $('#'+id).find($('a'));
+		  isDisable ? buttons.hide() : buttons.show();
+	});
+	buttonsIds.forEach(function(id){
+		$('#'+id).prop('disabled', isDisable);
+	});
 }
 
 //Редактирование участников
 
 function editMembersButtonHandler() {
-    hideBlock('check-list-review-block');
-    hideBlock('testing-dates-input-block');
-    hideBlock('problems-block');
-    showBlock('card-members-edit-block');
-    hideBlock('automation-block');
-    hideBlock('automation-cancel-button');
+	showActiveTab('card-members-edit-block');
 }
 
 async function pullMembersFromCardButtonHandler() {
