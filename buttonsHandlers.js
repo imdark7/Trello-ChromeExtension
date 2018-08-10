@@ -3,6 +3,7 @@ function addDatesInfoButtonHandler() {
     hideBlock('automation-block');
     hideBlock('problems-block');
     hideBlock('check-list-review-block');
+    hideBlock('card-members-edit-block');
     showBlock('save-comment-block');
     showBlock('testing-dates-input-block');
 
@@ -57,7 +58,6 @@ async function submitPopupHandler() {
     }
 }
 
-//Редактирование комментария
 async function commentEditingSaveButtonHandler(commentInfo, newText) {
     setButtonsDisabledState(true);
     var parsedComment = newText.split(': ');
@@ -78,7 +78,6 @@ function commentEditingCancelButtonHandler() {
     $('#error-message').text('');
 }
 
-//Окончание тестирования
 async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
     setButtonsDisabledState(true);
     var parsedComment = commentText.split(': ');
@@ -89,11 +88,13 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
     await addTrelloCardComment(await cardIdPromise, 'Участники: ' + await getCardMembersString());
 }
+////////////////////////
+
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
     hideBlock('testing-dates-input-block');
     hideBlock('automation-block');
-	hideBlock('card-members-edit-block');
+    hideBlock('card-members-edit-block');
     showBlock('problems-block');
     showFirstAndHideSecondBlock("fill-problems-info-block", "add-new-problem-block");
     hideBlock('problems-block-cancel-button');
@@ -162,14 +163,19 @@ function addProblemsInfoCancelButtonHandler() {
     standProblemsTabStep = 1;
 }
 
-
+async function removeProblemIconHandler(id) {
+    setButtonsDisabledState;
+    await deleteTrelloCardComment(id);
+    $(`#${id}`).remove();
+}
+///////////////////////////
 
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
     hideBlock('testing-dates-input-block');
     hideBlock('automation-block');
     hideBlock('problems-block');
-	hideBlock('card-members-edit-block');
+    hideBlock('card-members-edit-block');
     showBlock('check-list-review-block');
 
     showFirstAndHideSecondBlock('check-list-review-block', 'testing-dates-input-block');
@@ -199,14 +205,34 @@ async function addReviewerSubmitButtonHandler() {
         await addTrelloCardComment(serviceCardId, "Ревью: " + reviewer + ';');
     }
     await refreshPopup(true, 'reviewComment');
-    // refreshReviewersInfo();
 }
+
+async function removeReviewerIconHandler(tester) {
+    $('#current-reviewers-block').find($(`div:contains(${tester})`)).hide();
+    setButtonsDisabledState(true);
+    var commentInfo = doesTheCommentExist("Ревью:");
+    await updateTrelloCardComment(commentInfo[0].id, "Ревью:" + getActiveReviewers());
+    $("#reviewers-error-message").text('');
+    var reviewersBlock = $('#current-reviewers-block').find($('a')).hide();
+    refreshPopup(true, 'reviewComment');
+}
+
+function getActiveReviewers() {
+    var reviewers = $('#current-reviewers-block').find($(`div:visible`));
+    var str = '';
+    for (var i = 0; i < reviewers.length; i++) {
+        str += ' ' + reviewers[i].firstChild.textContent + ';';
+    }
+    return str;
+}
+///////////////
+
 //Автоматизация
 function automationButtonHandler() {
     hideBlock('check-list-review-block');
     hideBlock('testing-dates-input-block');
     hideBlock('problems-block');
-	hideBlock('card-members-edit-block');
+    hideBlock('card-members-edit-block');
     showBlock('automation-block');
     hideBlock('automation-cancel-button');
     showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
@@ -234,8 +260,8 @@ async function automationSubmitButtonHandler() {
         await addComment("Автоматизация: ", automationDropdownValue);
         await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);
         setButtonsDisabledState(false);
-        await refreshPopup(true, automationComment);
-        await refreshPopup(true, lackOfAutomationComment);
+        await refreshPopup(true, 'automationComment');
+        await refreshPopup(true, 'lackOfAutomationComment');
     }
 }
 
@@ -258,33 +284,17 @@ function automationCancelButtonHandler() {
     hideBlock('automation-cancel-button');
     automationPopupStep = 1;
 }
+/////////////////
 
 
-
-async function removeReviewerIconHandler(tester) {
-    $('#current-reviewers-block').find($(`div:contains(${tester})`)).hide();
-    setButtonsDisabledState(true);
-    var commentInfo = doesTheCommentExist("Ревью:");
-    await updateTrelloCardComment(commentInfo.id, "Ревью:" + getActiveReviewers());
-    $("#reviewers-error-message").text('');
-    var reviewersBlock = $('#current-reviewers-block').find($('a')).hide();
-    refreshPopup(true, 'reviewComment');
-}
-
-function getActiveReviewers() {
-    var reviewers = $('#current-reviewers-block').find($(`div:visible`));
-    var str = '';
-    for (var i = 0; i < reviewers.length; i++) {
-        str += ' ' + reviewers[i].firstChild.textContent + ';';
-    }
-    return str;
-}
 
 function setButtonsDisabledState(isDisable) {
     var blocks = $('#current-reviewers-block').find($('a'));
     isDisable ? blocks.hide() : blocks.show();
-	var ProblemsRemoveButtons = $('#existing-problems-block').find($('a'));
-	isDisable ?  ProblemsRemoveButtons.hide() :  ProblemsRemoveButtons.show();
+    var problemsRemoveButtons = $('#existing-problems-block').find($('a'));
+    isDisable ? problemsRemoveButtons.hide() : problemsRemoveButtons.show();
+    var membersRemoveButtons = $('#current-members-block').find($('a'));
+    isDisable ? membersRemoveButtons.hide() : membersRemoveButtons.show();
     $('#add-reviewer-submit-button').prop('disabled', isDisable);
     $('#ext-popup-submit').prop('disabled', isDisable);
     $('#comment-editing-save-button').prop('disabled', isDisable);
@@ -293,6 +303,42 @@ function setButtonsDisabledState(isDisable) {
     $('#automation-cancel-button').prop('disabled', isDisable);
     $('#problems-block-submit-button').prop('disabled', isDisable);
     $('#problems-block-cancel-button').prop('disabled', isDisable);
+    $('#pull-members-from-card').prop('disabled', isDisable);
+
 }
 
 //Редактирование участников
+
+function editMembersButtonHandler() {
+    hideBlock('check-list-review-block');
+    hideBlock('testing-dates-input-block');
+    hideBlock('problems-block');
+    showBlock('card-members-edit-block');
+    hideBlock('automation-block');
+    hideBlock('automation-cancel-button');
+}
+
+async function pullMembersFromCardButtonHandler() {
+    setButtonsDisabledState(true);
+    var serviceCardId = await findServiceCard();
+    if (!serviceCardId) {
+        serviceCardId = await createCardOnServiceBoard();
+    }
+    var membersComment = doesTheCommentExist('Участники');
+    if (membersComment) {
+        await updateTrelloCardComment(membersComment[0].id, 'Участники: ' + await getCardMembersString())
+    } else {
+        await addTrelloCardComment(serviceCardId, 'Участники: ' + await getCardMembersString());
+    }
+    refreshPopup(true, 'members');
+    await showMembers();
+    setButtonsDisabledState(false);
+}
+
+async function removeMember(blockNum, nameToRemove, comment) {
+    setButtonsDisabledState(true);
+    await updateTrelloCardComment(comment.id, comment.text.replace(nameToRemove + "; ", " "));
+    $("#member-" + blockNum).remove();
+    refreshPopup(true, 'members');
+    setButtonsDisabledState(false);
+}

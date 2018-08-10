@@ -1,40 +1,4 @@
-var eventsDictionary = {
-    readyForTestingDate: "Готова к тестированию",
-    testingStartDate: "Начали тестировать",
-    endOfTestingEstimateDate: "Планируем закончить тестирование",
-    endOfTestingDate: "Закончили тестирование"
-}
-
-var additionalCommentsDictionary = {
-    reviewComment: "Ревью",
-    members: "Участники",
-    automationComment: "Автоматизация",
-    lackOfAutomationComment: "Причины недостаточной автоматизации",
-}
-var testStandsDictionary = [
-    '01', '02', '03', '04', '05', '06', '07', '08', '09', '10',
-    '11', '12', '13', '14', '15', '16', '17', '18', '19', '20',
-    '21', '22', '23', '24', '25', '26', '27', '28', '29', '30'
-];
-
-var automationInfoDictionary = {
-    noAutomatization: "Не писали тесты",
-    fullAutomatization: "Полностью покрыли функтестами",
-    partialAutomatization: "Частично покрыли функтестами"
-}
-const otherProblemValue = "Другая проблема";
-
-var lackOfAutomationReasonsDictionary = {
-    IAmNoob: "Не пишу тесты",
-    TestsAlreadyWriten: "Тесты уже написаны",
-    dontKnowHowToWriteTestsForThisArea: "Не знаю как писать тесты на эту область",
-    difficultScenarios: "Сложные сценарии",
-    rareScenarios: "Редкие сценарии. Тесты не нужны",
-    enoughAutomation: "Достаточно низкоуровневых тестов"
-}
-
 var currentProblems;
-
 var automationPopupStep;
 var standProblemsTabStep;
 var testersList;
@@ -71,6 +35,8 @@ async function placePopup() {
             $('#add-reviewer-cancel-button').click(() => addReviewerCancelButtonHandler());
             $('#comment-editing-cancel-button').click(() => commentEditingCancelButtonHandler());
             $('#add-reviewer-submit-button').click(() => addReviewerSubmitButtonHandler());
+            $('#edit-members-info').click(() => editMembersButtonHandler());
+            $('#pull-members-from-card').click(() => pullMembersFromCardButtonHandler());
         }
     );
     $(document).mouseup(function(e) {
@@ -154,9 +120,9 @@ async function refreshPopup(needFetchActions, commentToRefresh) {
 }
 
 async function refreshComment(eventType, blockId) {
-
     await addExistingComment(eventType, blockId);
 }
+
 async function showPopup() {
     cardActions = await getCardsActions();
     $("#date-time-input").val(getCurrentDate());
@@ -167,6 +133,7 @@ async function showPopup() {
     await refreshPopup(false);
     $("#existing-problems-block").empty();
     showProblems();
+    showMembers();
     showBlock("ext-popup");
 }
 
@@ -201,13 +168,6 @@ function addRemovingButtonForProblem(id) {
             Align: 'right'
         }
     }))
-
-}
-
-async function removeProblemIconHandler(id) {
-    setButtonsDisabledState;
-    await deleteTrelloCardComment(id);
-    $(`#${id}`).remove();
 }
 
 
@@ -218,6 +178,55 @@ async function showProblems() {
         showBlock('current-problems-header');
         showExistingProblem(problems);
     } else hideBlock('current-problems-header');
+}
+
+async function showMembers() {
+    cardActions = await getCardsActions();
+    var members = await doesTheCommentExist("Участники: ");
+    if (members) {
+        showBlock('current-members-block-header');
+        showExistingMembers(members[0]);
+    } else hideBlock('current-members-block-header');
+}
+
+function showExistingMembers(membersComment) {
+    block = $("#current-members-block");
+    $("#current-members-block").empty();
+    var membersArray = membersComment.text.replace("Участники: ", "").split("; ");
+    for (var i = 0; i < membersArray.length; i++) {
+        if (membersArray[i] == "") continue;
+        var memberBlock = $('<div>', {
+            id: 'member-' + i,
+            css: {
+                width: '100%',
+                minHeight: '30px',
+                display: 'inline-block',
+                borderTop: '1px solid #d6dadc'
+            }
+        }).html($('<div>', {
+            css: {
+                display: 'inline-block',
+                width: '90%',
+                verticalAlign: 'middle'
+            }
+        }).html($('<b>').text(membersArray[i].trim())));
+        block.append(memberBlock);
+        addRemovingButtonForMember(i, membersArray[i], membersComment);
+    }
+}
+
+function addRemovingButtonForMember(blockNum, nameToRemove, comment) {
+    {
+        $("#member-" + blockNum).append($('<a>', {
+            id: 'member-' + blockNum + '-close-icon',
+            click: () => removeMember(blockNum, nameToRemove, comment),
+            class: 'icon-sm icon-close',
+            css: {
+                display: 'inline-block',
+                marginTop: '15px'
+            }
+        }))
+    }
 }
 
 
