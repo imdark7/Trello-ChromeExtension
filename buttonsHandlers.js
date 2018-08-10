@@ -1,10 +1,10 @@
 //Сохранение даты события
 function addDatesInfoButtonHandler() {
-	hideBlock('automation-block');
-	hideBlock('problems-block');
-	hideBlock('check-list-review-block');
-	showBlock('save-comment-block');
-	showBlock('testing-dates-input-block');
+    hideBlock('automation-block');
+    hideBlock('problems-block');
+    hideBlock('check-list-review-block');
+    showBlock('save-comment-block');
+    showBlock('testing-dates-input-block');
 
     $("#error-message").text('');
 }
@@ -22,34 +22,36 @@ async function submitPopupHandler() {
         showBlock('save-comment-block');
         return;
     }
-    
+
     var commentText = eventType + ": " + dateTime.toFullDateString();
     if ($(`#${getKeyByValue(eventsDictionary, eventType)}`).length > 0) {
-        var commentInfo = doesTheCommentExist(eventType);
-        showEditingConfirmationButtons(commentInfo, commentText);
-    } else {
-        if (eventType == eventsDictionary.readyForTestingDate) {
-            setButtonsDisabledState(true);
-           // showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
-            var serviceCardId = await findServiceCard();
-            if (!serviceCardId) {
-                serviceCardId = await createCardOnServiceBoard();
-            }
-            await addTrelloCardComment(serviceCardId, commentText);
-           await refreshPopup();
+        var commentInfo = doesTheCommentExist(eventType)
+        if (commentInfo) {
+            showEditingConfirmationButtons(commentInfo[0], commentText);
         } else {
-            var serviceCardIdPromise = findServiceCard();
-            if ($('#readyForTestingDate').length > 0) {
-                if (eventType == "Закончили тестирование") {
-                    showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText);
-                } else {
-                    setButtonsDisabledState(true);
-                    showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
-                    await addTrelloCardComment(await serviceCardIdPromise, commentText);
-                   await refreshPopup(true);
+            if (eventType == eventsDictionary.readyForTestingDate) {
+                setButtonsDisabledState(true);
+                showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
+                var serviceCardId = await findServiceCard();
+                if (!serviceCardId) {
+                    serviceCardId = await createCardOnServiceBoard();
                 }
+                await addTrelloCardComment(serviceCardId, commentText);
+                await refreshPopup(true);
             } else {
-                $('#error-message').text('Карточка недоступна для редактирования');
+                var serviceCardIdPromise = findServiceCard();
+                if ($('#readyForTestingDate').length > 0) {
+                    if (eventType == "Закончили тестирование") {
+                        showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText);
+                    } else {
+                        setButtonsDisabledState(true);
+                        showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
+                        await addTrelloCardComment(await serviceCardIdPromise, commentText);
+                        await refreshPopup(true);
+                    }
+                } else {
+                    $('#error-message').text('Карточка недоступна для редактирования');
+                }
             }
         }
     }
@@ -62,11 +64,11 @@ async function commentEditingSaveButtonHandler(commentInfo, newText) {
     showComment(getKeyByValue(eventsDictionary, parsedComment[0]), parsedComment[1])
     commentEditingCancelButtonHandler();
     await updateTrelloCardComment(commentInfo.id, newText);
-    refreshPopup();
-    if (commentInfo.text.includes(eventsDictionary.endOfTestingDate)){
-        await updateTrelloCardComment(doesTheCommentExist('Баги').id, 'Баги: ' + await getCardBugAmount());
-        await updateTrelloCardComment(doesTheCommentExist('Участники').id, 'Участники: '+ await getCardMembersString())
+    if (commentInfo.text.includes(eventsDictionary.endOfTestingDate)) {
+        await updateTrelloCardComment(doesTheCommentExist('Баги')[0].id, 'Баги: ' + await getCardBugAmount());
+        await updateTrelloCardComment(doesTheCommentExist('Участники')[0].id, 'Участники: ' + await getCardMembersString())
     }
+    await refreshPopup(true);
 }
 
 function commentEditingCancelButtonHandler() {
@@ -77,7 +79,7 @@ function commentEditingCancelButtonHandler() {
 }
 
 //Окончание тестирования
-async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText){
+async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
     setButtonsDisabledState(true);
     var parsedComment = commentText.split(': ');
     showComment(getKeyByValue(eventsDictionary, parsedComment[0]), parsedComment[1])
@@ -85,45 +87,110 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText){
     await addTrelloCardComment(await cardIdPromise, commentText);
     await refreshPopup();
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
-    await addTrelloCardComment(await cardIdPromise, 'Участники: '+ await getCardMembersString());
+    await addTrelloCardComment(await cardIdPromise, 'Участники: ' + await getCardMembersString());
 }
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
-hideBlock('testing-dates-input-block');
-	hideBlock('automation-block');
-	showBlock('problems-block');
-	hideBlock('check-list-review-block');
+    hideBlock('testing-dates-input-block');
+    hideBlock('automation-block');
+	hideBlock('card-members-edit-block');
+    showBlock('problems-block');
+    showFirstAndHideSecondBlock("fill-problems-info-block", "add-new-problem-block");
+    hideBlock('problems-block-cancel-button');
+    hideBlock('check-list-review-block');
+    $("#new-problem-error-message").text('');
+    standProblemsTabStep = 1;
 }
+
+async function addProblemsInfoSubmitButtonHandler() {
+    var problemsDropdownValue = $('#problems-dropdown').val();
+    var problemsCommentValue = $('#problem-comment-input').val();
+    var testStandNumber = $('#test-stands-dropdown').val();
+
+    if (standProblemsTabStep == 1) {
+        if (problemsDropdownValue == otherProblemValue) {
+            showFirstAndHideSecondBlock("add-new-problem-block", "fill-problems-info-block");
+            showBlock('problems-block-cancel-button');
+            standProblemsTabStep = 2;
+        } else {
+            $("#new-problem-error-message").text('');
+            setButtonsDisabledState(true);
+
+
+
+            var serviceCardId = await findServiceCard();
+            if (!serviceCardId) {
+                serviceCardId = await createCardOnServiceBoard();
+            }
+            await addTrelloCardComment(serviceCardId, "Проблема: Тестовый стенд: " + testStandNumber + '; Тип проблемы: ' + problemsDropdownValue + '; Комментарий: ' + problemsCommentValue);
+            showProblems();
+            setButtonsDisabledState(false);
+        }
+
+
+    } else {
+        var newProblemDescription = $('#new-problem-input').val();
+        if (newProblemDescription == "") {
+            $("#new-problem-error-message").text('Введите описание проблемы или вернитесь назад и выберите значение из дропдауна');
+            return;
+        }
+
+        setButtonsDisabledState(true);
+        var serviceCardId = await findServiceCard();
+        if (!serviceCardId) {
+            serviceCardId = await createCardOnServiceBoard();
+        }
+        var trelloProblemDescriptionText = "Проблема: Тестовый стенд: " + testStandNumber + '; Проблема: ' + newProblemDescription;
+        if (problemsCommentValue != "")
+            trelloProblemDescriptionText += '; Комментарий: ' + problemsCommentValue;
+        await addTrelloCardComment(serviceCardId, trelloProblemDescriptionText)
+        showProblems();
+        if (Object.values(testStandProblemsList).indexOf(newProblemDescription) == -1 || newProblemDescription == otherProblemValue) {
+            await addNewTestStandProblemsType(newProblemDescription);
+        }
+
+        setButtonsDisabledState(false);
+
+    }
+
+}
+
+function addProblemsInfoCancelButtonHandler() {
+    hideBlock('problems-block-cancel-button');
+    $("#new-problem-error-message").text('');
+    showFirstAndHideSecondBlock("fill-problems-info-block", "add-new-problem-block");
+    standProblemsTabStep = 1;
+}
+
+
+
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
-	hideBlock('testing-dates-input-block');
-	hideBlock('automation-block');
-	hideBlock('problems-block');
-	showBlock('check-list-review-block');
+    hideBlock('testing-dates-input-block');
+    hideBlock('automation-block');
+    hideBlock('problems-block');
+	hideBlock('card-members-edit-block');
+    showBlock('check-list-review-block');
 
     showFirstAndHideSecondBlock('check-list-review-block', 'testing-dates-input-block');
-	
+
     $("#reviewers-error-message").text('');
 }
 
-async function addReviewerCancelButtonHandler() {
-	 await refreshPopup(true);
-    showFirstAndHideSecondBlock('testing-dates-input-block', 'check-list-review-block')
-}
 async function addReviewerSubmitButtonHandler() {
     setButtonsDisabledState(true);
-    var reviewer = $('#testing-reviewers-dropdown').val(); 
+    var reviewer = $('#testing-reviewers-dropdown').val();
     $('#current-reviewers-block').find($(`div:contains(${reviewer})`)).show();
     $("#reviewers-error-message").text('');
     cardActions = await getCardsActions();
     var commentInfo = doesTheCommentExist("Ревью:");
     if (commentInfo) {
-        if (commentInfo.text.includes(reviewer)) {
+        if (commentInfo[0].text.includes(reviewer)) {
             $("#reviewers-error-message").text(reviewer + ' уже значится ревьюером по этой задаче');
             setButtonsDisabledState(false);
             return;
         }
-        await updateTrelloCardComment(commentInfo.id, "Ревью:" + getActiveReviewers());
+        await updateTrelloCardComment(commentInfo[0].id, "Ревью:" + getActiveReviewers());
     } else {
         var serviceCardId = await findServiceCard();
         if (!serviceCardId) {
@@ -131,65 +198,65 @@ async function addReviewerSubmitButtonHandler() {
         }
         await addTrelloCardComment(serviceCardId, "Ревью: " + reviewer + ';');
     }
-    refreshReviewersInfo();
+    await refreshPopup(true, 'reviewComment');
+    // refreshReviewersInfo();
 }
 //Автоматизация
-function automationButtonHandler(){
-	hideBlock('check-list-review-block');
-	hideBlock('testing-dates-input-block');
-	hideBlock('problems-block');
-	showBlock('automation-block');
-	hideBlock('automation-cancel-button');
-	showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
-	automationPopupStep = 1;
+function automationButtonHandler() {
+    hideBlock('check-list-review-block');
+    hideBlock('testing-dates-input-block');
+    hideBlock('problems-block');
+	hideBlock('card-members-edit-block');
+    showBlock('automation-block');
+    hideBlock('automation-cancel-button');
+    showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
+    automationPopupStep = 1;
 }
 
-async function automationSubmitButtonHandler(){
-	  
-	var automationDropdownValue=$('#automation-dropdown').val();
-	var lackOfAutomationDropdownValue=$('#lack-of-automation-reasons-dropdown').val();
-	if (automationPopupStep == 1){
-		if (automationDropdownValue == 'Полностью покрыли функтестами')
-		{
-		setButtonsDisabledState(true);
-		 await addComment("Автоматизация: ", automationDropdownValue);
-         await addComment("Причины недостаточной автоматизации: ","");		
-		setButtonsDisabledState(false);		 
-		  		  refreshPopup(true);
-		}
-		else
-			showBlock('automation-cancel-button');
-		showFirstAndHideSecondBlock('lack-of-automation-info','automation-info');
-		automationPopupStep = 2;
-	}
-	else {
-		setButtonsDisabledState(true);
-		await addComment("Автоматизация: ", automationDropdownValue);
-         await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);	
-		  setButtonsDisabledState(false);
-		 await refreshPopup(true);
-	}
-	}
-	
-async function addComment(prefix, value){
-	   cardActions = await getCardsActions();
-			var commentInfo = doesTheCommentExist(prefix);
-			if(commentInfo){
-			await updateTrelloCardComment(commentInfo.id, prefix + value);
-			}
-			else {
-				var serviceCardId = await findServiceCard();
-				if (!serviceCardId) {
-					serviceCardId = await createCardOnServiceBoard();
-        }
-        await addTrelloCardComment(serviceCardId ,prefix + value);
+async function automationSubmitButtonHandler() {
+
+    var automationDropdownValue = $('#automation-dropdown').val();
+    var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
+    if (automationPopupStep == 1) {
+        if (automationDropdownValue == 'Полностью покрыли функтестами') {
+            setButtonsDisabledState(true);
+            await addComment("Автоматизация: ", automationDropdownValue);
+            await addComment("Причины недостаточной автоматизации: ", "");
+            setButtonsDisabledState(false);
+            await refreshPopup(true, 'automationComment');
+            await refreshPopup(true, 'lackOfAutomationComment');
+        } else
+            showBlock('automation-cancel-button');
+        showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
+        automationPopupStep = 2;
+    } else {
+        setButtonsDisabledState(true);
+        await addComment("Автоматизация: ", automationDropdownValue);
+        await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);
+        setButtonsDisabledState(false);
+        await refreshPopup(true, automationComment);
+        await refreshPopup(true, lackOfAutomationComment);
     }
 }
 
-function automationCancelButtonHandler(){
-		showFirstAndHideSecondBlock('automation-info','lack-of-automation-info');
-		hideBlock('automation-cancel-button');
-		automationPopupStep = 1;
+async function addComment(prefix, value) {
+    cardActions = await getCardsActions();
+    var commentInfo = doesTheCommentExist(prefix);
+    if (commentInfo) {
+        await updateTrelloCardComment(commentInfo[0].id, prefix + value);
+    } else {
+        var serviceCardId = await findServiceCard();
+        if (!serviceCardId) {
+            serviceCardId = await createCardOnServiceBoard();
+        }
+        await addTrelloCardComment(serviceCardId, prefix + value);
+    }
+}
+
+function automationCancelButtonHandler() {
+    showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
+    hideBlock('automation-cancel-button');
+    automationPopupStep = 1;
 }
 
 
@@ -201,25 +268,31 @@ async function removeReviewerIconHandler(tester) {
     await updateTrelloCardComment(commentInfo.id, "Ревью:" + getActiveReviewers());
     $("#reviewers-error-message").text('');
     var reviewersBlock = $('#current-reviewers-block').find($('a')).hide();
-    refreshReviewersInfo();
+    refreshPopup(true, 'reviewComment');
 }
 
-function getActiveReviewers(){
+function getActiveReviewers() {
     var reviewers = $('#current-reviewers-block').find($(`div:visible`));
     var str = '';
-        for (var i=0; i< reviewers.length; i++){
-            str += ' ' + reviewers[i].firstChild.textContent + ';';
-        }
+    for (var i = 0; i < reviewers.length; i++) {
+        str += ' ' + reviewers[i].firstChild.textContent + ';';
+    }
     return str;
 }
 
-function setButtonsDisabledState(isDisable){
+function setButtonsDisabledState(isDisable) {
     var blocks = $('#current-reviewers-block').find($('a'));
     isDisable ? blocks.hide() : blocks.show();
+	var ProblemsRemoveButtons = $('#existing-problems-block').find($('a'));
+	isDisable ?  ProblemsRemoveButtons.hide() :  ProblemsRemoveButtons.show();
     $('#add-reviewer-submit-button').prop('disabled', isDisable);
     $('#ext-popup-submit').prop('disabled', isDisable);
     $('#comment-editing-save-button').prop('disabled', isDisable);
-	$('#comment-editing-save-button').prop('disabled', isDisable);
-	$('#automation-submit-button').prop('disabled', isDisable);
+    $('#comment-editing-save-button').prop('disabled', isDisable);
+    $('#automation-submit-button').prop('disabled', isDisable);
+    $('#automation-cancel-button').prop('disabled', isDisable);
+    $('#problems-block-submit-button').prop('disabled', isDisable);
+    $('#problems-block-cancel-button').prop('disabled', isDisable);
 }
 
+//Редактирование участников

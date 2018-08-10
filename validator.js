@@ -63,7 +63,7 @@ function isValidDate(eventType, dateTime) {
 function getDateIfExist(eventType) {
     var dateString = doesTheCommentExist(eventType);
     if (dateString) {
-        return getDateFromString(dateString.text.slice(-17));
+        return getDateFromString(dateString[0].text.slice(-17));
     }
     return;
 }
