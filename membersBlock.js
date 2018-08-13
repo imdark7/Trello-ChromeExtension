@@ -10,7 +10,7 @@ async function showMembers() {
 
 function showExistingMembers(membersComment) {
     block = $("#current-members-block");
-    var membersArray = membersComment.text.replace("Участники: ", "").split("; ");
+    var membersArray = membersComment.text.replace("Участники: ", "").split(";");
     for (var i = 0; i < membersArray.length; i++) {
         if (membersArray[i] == "") continue;
         var memberBlock = $('<div>', {
@@ -29,15 +29,15 @@ function showExistingMembers(membersComment) {
 			}
 			}).html($('<b>').text(membersArray[i].trim())));
         block.append(memberBlock);
-        addRemovingButtonForMember(i, membersArray[i], membersComment);
+        addRemovingButtonForMember(i, membersArray[i].trim(), membersComment.id);
     }
 }
 
-function addRemovingButtonForMember(blockNum, nameToRemove, comment) {
+function addRemovingButtonForMember(blockNum, nameToRemove, commentId) {
     {
         $("#member-" + blockNum).append($('<a>', {
             id: 'member-' + blockNum + '-close-icon',
-            click: () => removeMember(blockNum, nameToRemove, comment),
+            click: () => removeMember(blockNum, nameToRemove, commentId),
             class: 'icon-sm icon-close',
             css: {
                 display: 'inline-block',

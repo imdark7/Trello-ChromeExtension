@@ -298,9 +298,10 @@ async function pullMembersFromCardButtonHandler() {
     setButtonsDisabledState(false);
 }
 
-async function removeMember(blockNum, nameToRemove, comment) {
+async function removeMember(blockNum, nameToRemove, commentId) {
     setButtonsDisabledState(true);
-    await updateTrelloCardComment(comment.id, comment.text.replace(nameToRemove + "; ", " "));
+	var commentCurrentText = await readCommentText(commentId)
+    await updateTrelloCardComment(commentId, commentCurrentText.replace(nameToRemove + ";", "").trim());
     $("#member-" + blockNum).remove();
     refreshPopup(true, 'members');
     setButtonsDisabledState(false);

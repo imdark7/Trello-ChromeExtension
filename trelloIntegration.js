@@ -10,6 +10,17 @@
       cardActions = await getCardsActions();
       return response.id;
   }
+  
+async function readCommentText(commentId){
+	   var options = {
+          method: "GET"
+      };	  
+	 var readCommentUrl="https://api.trello.com/1/actions/" + commentId + "/data" +
+	 '?key=' +apiKey +
+     '&token=' + apiToken;
+	var response= await fetch(readCommentUrl, options).then((resp) => resp.json());
+	return response.text.trim();
+  }
 
   function doesTheCommentExist(eventType) {
       var result = [];
@@ -161,7 +172,7 @@
               return data;
           });
       response.members.forEach(element => {
-          str += element.fullName + '; ';
+          str += element.fullName + ';';
       });
       response.actions.forEach(element => {
           if (str.indexOf(element.member.fullName) < 0) {
