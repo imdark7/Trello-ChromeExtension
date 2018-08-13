@@ -228,10 +228,11 @@ async function automationSubmitButtonHandler() {
             setButtonsDisabledState(false);
             await refreshPopup(true, 'automationComment');
             await refreshPopup(true, 'lackOfAutomationComment');
-        } else
+        } else{
             showBlock('automation-cancel-button');
-        showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
-        automationPopupStep = 2;
+			showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
+			automationPopupStep = 2;
+		}
     } else {
         setButtonsDisabledState(true);
         await addComment("Автоматизация: ", automationDropdownValue);
