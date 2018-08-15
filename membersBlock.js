@@ -12,7 +12,7 @@ function showExistingMembers(membersComment) {
     block = $("#current-members-block");
     var membersArray = membersComment.text.replace("Участники: ", "").split(";");
     for (var i = 0; i < membersArray.length; i++) {
-        if (membersArray[i] == "") continue;
+        if (membersArray[i].trim() == "") continue;
         var memberBlock = $('<div>', {
             id: 'member-' + i,
             css: {

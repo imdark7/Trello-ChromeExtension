@@ -1,5 +1,6 @@
 //Сохранение даты события
 function addDatesInfoButtonHandler() {
+	setTabButtonActiveColor("add-dates-info-button");
 	showActiveTab('testing-dates-input-block');
     showBlock('save-comment-block');
 	hideBlock('edit-comment-confirmation-block');
@@ -88,6 +89,7 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
 
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
+	setTabButtonActiveColor("add-test-stands-problem-button");
 	showActiveTab('problems-block');
 	showBlock('fill-problems-info-block');
     hideBlock ("add-new-problem-block");
@@ -159,6 +161,7 @@ async function removeProblemIconHandler(id) {
 
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
+	setTabButtonActiveColor("add-reviewers-button");
     showActiveTab('check-list-review-block');
     $("#reviewers-error-message").text('');
 }
@@ -209,6 +212,7 @@ function getActiveReviewers() {
 
 //Автоматизация
 function automationButtonHandler() {
+		setTabButtonActiveColor("add-automation-info-button");
     showActiveTab('automation-block');
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
@@ -278,6 +282,7 @@ function setButtonsDisabledState(isDisable) {
 //Редактирование участников
 
 function editMembersButtonHandler() {
+	setTabButtonActiveColor("edit-members-info-button");
 	showActiveTab('card-members-edit-block');
 }
 

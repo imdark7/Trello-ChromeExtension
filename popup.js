@@ -22,20 +22,22 @@ async function placePopup() {
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }
-            $('#add-test-stands-problem-info').click(() => addProblemsInfoButtonHandler());
+			 addTabsIcons();
+            $('#add-test-stands-problem-button').click(() => addProblemsInfoButtonHandler());
             $('#ext-popup-close').click(() => hidePopup());
-            $('#add-dates-info').click(() => addDatesInfoButtonHandler())
-            $('#add-automation-info').click(() => automationButtonHandler());
+            $('#add-dates-info-button').click(() => addDatesInfoButtonHandler())
+			setTabButtonActiveColor("add-dates-info-button");
+            $('#add-automation-info-button').click(() => automationButtonHandler());
             $('#problems-block-submit-button').click(() => addProblemsInfoSubmitButtonHandler());
             $('#problems-block-cancel-button').click(() => addProblemsInfoCancelButtonHandler());
             $('#automation-submit-button').click(() => automationSubmitButtonHandler());
             $('#automation-cancel-button').click(() => automationCancelButtonHandler());
             $('#ext-popup-submit').click(() => submitPopupHandler());
-            $('#add-reviewers').click(() => addReviwersButtonHandler());
+            $('#add-reviewers-button').click(() => addReviwersButtonHandler());
             $('#add-reviewer-cancel-button').click(() => addReviewerCancelButtonHandler());
             $('#comment-editing-cancel-button').click(() => commentEditingCancelButtonHandler());
             $('#add-reviewer-submit-button').click(() => addReviewerSubmitButtonHandler());
-            $('#edit-members-info').click(() => editMembersButtonHandler());
+            $('#edit-members-info-button').click(() => editMembersButtonHandler());
             $('#pull-members-from-card').click(() => pullMembersFromCardButtonHandler());
         }
     );
@@ -51,6 +53,32 @@ async function placePopup() {
             $("#ext-popup").hide();
         }
     });
+}
+
+function setTabButtonActiveColor(activeButtonId){
+	const activeButtonColor = "#b6bbbf";
+	const inactiveButtonColor = "#edeff0";
+	tabButtonsId.forEach(function(id){
+		var color = (id==activeButtonId)? activeButtonColor : inactiveButtonColor;
+					$("#"+id).css("background-color",color);
+			})
+	
+}
+function addTabsIcons(){
+	tabButtonsId.forEach(function(id){
+		$('#'+id).append($('<span>', {
+					class: 'icon-sm plugin-icon',
+					css: {
+							'min-height':'35px',
+							'min-width':'35px',
+							display: 'inline-block',
+							marginLeft : '7px',
+							'background-size': '30px 30px',
+            backgroundImage: `url(${chrome.runtime.getURL(`icons/${id}-icon.png`)})`
+					}
+				}))
+		
+	})
 }
 
 function addDropdownOptions(dropdownId, optionsArray) {

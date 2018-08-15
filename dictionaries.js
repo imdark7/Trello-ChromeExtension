@@ -13,6 +13,14 @@ var tabsIds=[
 		'card-members-edit-block'
 ]
 
+var tabButtonsId = [
+'add-dates-info-button',
+'add-reviewers-button',
+'edit-members-info-button',
+'add-test-stands-problem-button',
+'add-automation-info-button'
+]
+
 var buttonsIds=[
 	'add-reviewer-submit-button',
     'ext-popup-submit',

@@ -1,15 +1,19 @@
 <div id="ext-popup" style="display: none; min-width:370px; overflow: scroll">
     <div id="ext-popup-container" class="pop-over is-shown" style="min-width:370px;">
         <div class="pop-over-header js-pop-over-header" style="min-width:370px;">
-            <span class="pop-over-header-title">Сроки тестирования</span>
+            <span class="pop-over-header-title">Проблеморешатель 3.0</span>
             <a id="ext-popup-close" href="javascript:void(0);" class="pop-over-header-close-btn icon-sm icon-close"></a>
         </div>
         <div class="pop-over-content js-pop-over-content u-fancy-scrollbar js-tab-parent" style="max-height: 418px;">
-            <div id="tabs-block" style="min-height:85px; border-bottom: 1px solid rgb(214, 218, 220)">
-                <input id="add-dates-info" style="min-width:28%; display:inline;" class="primary wide confirm" type="submit" value="Сроки"><input id="add-reviewers" style="min-width:32%; display:inline;" class="primary wide confirm" type="submit" value="Ревью"><input id="edit-members-info" style="min-width:32%; display:inline;" class="primary wide confirm" type="submit" value="Участники">
-                <input id="add-automation-info" style="min-width:49%; display:inline;" class="primary wide confirm" type="submit" value="Автотесты"><input id="add-test-stands-problem-info" style="min-width:47%; display:inline;" class="primary wide confirm" type="submit" value="Проблемы">
+            <div id="tabs-block"">
+		<a title="Дата и время" id="add-dates-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+		<a title="Ревьюеры"id="add-reviewers-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+		<a title="Редактирование участников" id="edit-members-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+		<a title="Проблемы с тестовыми стендами" id="add-test-stands-problem-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+		<a title="Автоматизация" id="add-automation-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+           
             </div>
-            <div id='testing-dates-input-block' style="border-bottom: 1px solid #d6dadc">
+            <div id='testing-dates-input-block' style="width:95%;border-bottom: 1px solid #d6dadc">
                 <div>
                     <form class="dpicker-widget u-clearfix">
                         <div class="datepicker-select u-clearfix">
@@ -33,7 +37,7 @@
                     <input id="comment-editing-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Отмена">
                 </div>
             </div>
-            <div id="check-list-review-block" style="display:none; min-width:350px;border-bottom: 1px solid #d6dadc">
+            <div id="check-list-review-block" style="width:95%; display:none;border-bottom: 1px solid #d6dadc">
                 <div>
                     <label class="datepicker-select-label">Ревьюер:</label>
                     <select id="testing-reviewers-dropdown" class="js-checklist">
@@ -46,7 +50,7 @@
                 <div id='current-reviewers-block' style="width:95%px;">
                 </div>
             </div>
-            <div id="automation-block" style="display:none; border-bottom: 1px solid #d6dadc">
+            <div id="automation-block" style="width:95%;display:none; border-bottom: 1px solid #d6dadc">
                 <div id="automation-info" style="display:none;">
                     <label class="datepicker-select-label">Автоматизация задачи: </label>
                     <select id="automation-dropdown" class="js-checklist">
@@ -61,7 +65,7 @@
                     <input id="automation-submit-button" style="width:48%;margin-bottom: 10px" class="primary wide confirm" type="submit" value="Продолжить"><input id="automation-cancel-button" class="primary wide confirm" type="submit" style="width:48%; background:red" value="Назад">
                 </div>
             </div>
-            <div id="problems-block" style="display: none; border-bottom: 1px solid #d6dadc">
+            <div id="problems-block" style="width:95%;display: none; border-bottom: 1px solid #d6dadc">
                 <label for="test-stands-dropdown" class="datepicker-select-label">Тестовый стенд: </label>
                 <select id="test-stands-dropdown" class="js-checklist">
                 </select>
@@ -84,9 +88,9 @@
                 <div id='existing-problems-block' style="width:100%; min-height:20px;">
                 </div>
             </div>
-            <div id="card-members-edit-block" style="display: none; border-bottom: 1px solid #d6dadc">
-                <input id="pull-members-from-card" style="width:95%; display:inline;" class="primary wide confirm" type="submit" value="Подтянуть участников из карточки">
-                <span id="current-members-block-header" class="pop-over-header-title" align="center" style="width:95%">Текущие участники</span>
+            <div id="card-members-edit-block" style="width:95%;display: none; border-bottom: 1px solid #d6dadc">
+                <input id="pull-members-from-card" style="width:100%; display:inline;" class="primary wide confirm" type="submit" value="Подтянуть участников из карточки">
+                <span id="current-members-block-header" class="pop-over-header-title" align="center" style="width:100%">Текущие участники</span>
                 <div id='current-members-block' style="width:100%; min-height:20px;">
                 </div>
             </div>
