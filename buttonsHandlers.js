@@ -241,9 +241,13 @@ async function automationSubmitButtonHandler() {
         setButtonsDisabledState(true);
         await addComment("Автоматизация: ", automationDropdownValue);
         await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);
-        setButtonsDisabledState(false);
+		hideBlock('automation-cancel-button');
+		showBlock('automation-info');
+		hideBlock('lack-of-automation-info');
+		automationPopupStep = 1;
         await refreshPopup(true, 'automationComment');
         await refreshPopup(true, 'lackOfAutomationComment');
+		setButtonsDisabledState(false);
     }
 }
 

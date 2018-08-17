@@ -72,7 +72,7 @@ function addTabsIcons(){
 							'min-height':'35px',
 							'min-width':'35px',
 							display: 'inline-block',
-							marginLeft : '7px',
+							marginLeft : '5px',
 							'background-size': '30px 30px',
             backgroundImage: `url(${chrome.runtime.getURL(`icons/${id}-icon.png`)})`
 					}
