@@ -90,7 +90,8 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
 	setTabButtonActiveColor("add-test-stands-problem-button");
-	showActiveTab('problems-block');
+    showActiveTab('problems-block');
+    $("#problem-comment-input").val('')
 	showBlock('fill-problems-info-block');
     hideBlock ("add-new-problem-block");
     hideBlock('problems-block-cancel-button');
@@ -108,7 +109,8 @@ async function addProblemsInfoSubmitButtonHandler() {
             showFirstAndHideSecondBlock("add-new-problem-block", "fill-problems-info-block");
             showBlock('problems-block-cancel-button');
             standProblemsTabStep = 2;
-        } else {
+        }
+        else {
             $("#new-problem-error-message").text('');
             setButtonsDisabledState(true);
             var serviceCardId = await findServiceCard();
@@ -119,13 +121,13 @@ async function addProblemsInfoSubmitButtonHandler() {
             showProblems();
             setButtonsDisabledState(false);
         }
-    } else {
+    }
+    else {
         var newProblemDescription = $('#new-problem-input').val();
         if (newProblemDescription == "") {
             $("#new-problem-error-message").text('Введите описание проблемы или вернитесь назад и выберите значение из дропдауна');
             return;
         }
-
         setButtonsDisabledState(true);
         var serviceCardId = await findServiceCard();
         if (!serviceCardId) {
@@ -138,11 +140,12 @@ async function addProblemsInfoSubmitButtonHandler() {
         showProblems();
         if (Object.values(testStandProblemsList).indexOf(newProblemDescription) == -1 || newProblemDescription == otherProblemValue) {
             await addNewTestStandProblemsType(newProblemDescription);
+            $("#problems-dropdown").append($('<option>').html(newProblemDescription));
         }
+        $("#problem-comment-input").val('')
         setButtonsDisabledState(false);
-
+        addProblemsInfoCancelButtonHandler();
     }
-
 }
 
 function addProblemsInfoCancelButtonHandler() {

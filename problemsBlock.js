@@ -18,11 +18,12 @@ function showExistingProblem(problems) {
         addRemovingButtonForProblem(problems[i].id);
     }
 }
+
 function parseProblemComment(text) {   
  var parsed = text.replace("Проблема:", "").trim().split(';');
-    var stand =  parsed[0].split(":")[1].trim();
+    var stand = parsed[0].split(":")[1].trim();
 	var problem = parsed[1].split(":")[1].trim();
-	var comment =  parsed[2].split(":")[1].trim();
+	var comment = parsed[2] != undefined ? parsed[2].split(":")[1].trim(): "";
 	var resultBlock=$('<div>', 
 	{
 		css:{
