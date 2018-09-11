@@ -38,17 +38,15 @@ async function readCommentText(commentId){
           return result;
       else return null
   }
-  async function getTestStandsProblemsList() {
-      var options = {
-          method: "GET"
-      };
-      var readTestStandsProblemsListUrl = 'https://api.trello.com/1/checklists/' + testStandProblemsListId + '?fields=name&cards=all&card_fields=name' +
+
+  async function getChecklistItems(checklistId) {
+      var options = {method: "GET"};
+      var getChecklistItemsUrl = 'https://api.trello.com/1/checklists/' + checklistId + '?fields=name&cards=all&card_fields=name' +
           '&key=' + apiKey +
           '&token=' + apiToken;
-      var problems = await fetch(readTestStandsProblemsListUrl, options).then((resp) => resp.json())
+      var problems = await fetch(getChecklistItemsUrl, options).then((resp) => resp.json())
           .then(function(data) {
               var result = {}
-
               for (var i = 0; i < data.checkItems.length; i++) {
                   result[i] = data.checkItems[i].name;
               }
@@ -57,13 +55,13 @@ async function readCommentText(commentId){
       return problems;
   }
 
-  async function addNewTestStandProblemsType(problemDescription) {
+  async function addNewItemToChecklist(itemName, listId) {
       var options = {
           method: "POST"
       };
-      var addNewProblemsTypeUrl = 'https://api.trello.com/1/checklists/' + testStandProblemsListId + '/checkItems' +
-          '?name=' + problemDescription +
-          '&pos=bottom' +
+      var addNewProblemsTypeUrl = 'https://api.trello.com/1/checklists/' + listId + '/checkItems' +
+          '?name=' + itemName +
+          '&pos=top' +
           '&key=' + apiKey +
           '&token=' + apiToken;
       await fetch(addNewProblemsTypeUrl, options)

@@ -9,7 +9,9 @@ setInterval(async function() {
 
         if (!document.getElementById('ext-popup-container')) {
             testersList = await getTestersList();
-            testStandProblemsList = await getTestStandsProblemsList();
+            testStandProblemsList = await getChecklistItems(testStandProblemsListId);
+            automationTypesList = await  getChecklistItems(automationInfoListId);
+            lackOfAutomationTypesList =  await getChecklistItems(lackOfAutomationReasonsListId);
             await placePopup();
         };
         placeLinks(windowSidebar);

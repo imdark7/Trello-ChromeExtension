@@ -13,12 +13,12 @@ async function placePopup() {
             addInfoFromServiveCardBlocks('existingCommentsBlock', eventsDictionary);
             addInfoFromServiveCardBlocks('existingCommentsBlock', additionalCommentsDictionary);
             addInfoFromServiveCardBlocks('current-reviewers-block', testersList);
-            addDropdownOptions('problems-dropdown', [otherProblemValue]);
             addDropdownOptions('problems-dropdown', testStandProblemsList);
+            addDropdownOptions('problems-dropdown', [otherProblemValue]);
             addDropdownOptions('test-stands-dropdown', testStandsNums);
             addDropdownOptions('testing-reviewers-dropdown', testersList);
-            addDropdownOptions('automation-dropdown', automationInfoDictionary);
-            addDropdownOptions('lack-of-automation-reasons-dropdown', lackOfAutomationReasonsDictionary);
+            addDropdownOptions('automation-dropdown',  automationTypesList);
+            addDropdownOptions('lack-of-automation-reasons-dropdown', lackOfAutomationTypesList);
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }

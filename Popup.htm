@@ -10,8 +10,7 @@
 		<a title="Ревьюеры"id="add-reviewers-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
 		<a title="Редактирование участников" id="edit-members-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
 		<a title="Проблемы с тестовыми стендами" id="add-test-stands-problem-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-		<a title="Автоматизация" id="add-automation-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-           
+		<a title="Автоматизация" id="add-automation-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>     
             </div>
             <div id='testing-dates-input-block' style="width:95%;border-bottom: 1px solid #d6dadc">
                 <div>
@@ -61,6 +60,11 @@
                     <select id="lack-of-automation-reasons-dropdown" class="js-checklist">
                     </select>
                 </div>
+                <div id="add-new-reason-block" style="display:none;">
+                    <label for="new-reason-input" class="datepicker-select-label">Введите краткое описание причины неполной автоматизации: </label>
+                    <input id="new-reason-input" style="background-color:white" type="text" dir="auto">
+                </div>
+                <div id="new-lack-of-automation-reason-error-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
                 <div style="display: inline-block; width:100%">
                     <input id="automation-submit-button" style="width:48%;margin-bottom: 10px" class="primary wide confirm" type="submit" value="Продолжить"><input id="automation-cancel-button" class="primary wide confirm" type="submit" style="width:48%; background:red" value="Назад">
                 </div>

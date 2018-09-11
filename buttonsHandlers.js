@@ -139,7 +139,7 @@ async function addProblemsInfoSubmitButtonHandler() {
         await addTrelloCardComment(serviceCardId, trelloProblemDescriptionText)
         showProblems();
         if (Object.values(testStandProblemsList).indexOf(newProblemDescription) == -1 || newProblemDescription == otherProblemValue) {
-            await addNewTestStandProblemsType(newProblemDescription);
+            await addNewItemToChecklist(newProblemDescription, testStandProblemsListId);
             $("#problems-dropdown").append($('<option>').html(newProblemDescription));
         }
         $("#problem-comment-input").val('')
@@ -226,32 +226,57 @@ function automationButtonHandler() {
 async function automationSubmitButtonHandler() {
 
     var automationDropdownValue = $('#automation-dropdown').val();
-    var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
     if (automationPopupStep == 1) {
-        if (automationDropdownValue == 'Полностью покрыли функтестами') {
-            setButtonsDisabledState(true);
-            await addComment("Автоматизация: ", automationDropdownValue);
-            await addComment("Причины недостаточной автоматизации: ", "");
-            setButtonsDisabledState(false);
-            await refreshPopup(true, 'automationComment');
-            await refreshPopup(true, 'lackOfAutomationComment');
-        } else{
+        if (automationDropdownValue == "Покрыли все необходимые сценарии") {
+           await addAutomationComments(automationDropdownValue,"");
+        } 
+        else
+        {
             showBlock('automation-cancel-button');
 			showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
 			automationPopupStep = 2;
-		}
-    } else {
-        setButtonsDisabledState(true);
-        await addComment("Автоматизация: ", automationDropdownValue);
-        await addComment("Причины недостаточной автоматизации: ", lackOfAutomationDropdownValue);
-		hideBlock('automation-cancel-button');
-		showBlock('automation-info');
-		hideBlock('lack-of-automation-info');
-		automationPopupStep = 1;
-        await refreshPopup(true, 'automationComment');
-        await refreshPopup(true, 'lackOfAutomationComment');
-		setButtonsDisabledState(false);
+        }
     }
+     else if (automationPopupStep == 2)
+     {  
+         var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
+         if (lackOfAutomationDropdownValue != "Указать другую причину"){
+            await addAutomationComments(automationDropdownValue,lackOfAutomationInfo);
+         }
+         else{
+             automationPopupStep = 3;
+             showFirstAndHideSecondBlock('add-new-reason-block','lack-of-automation-info');
+         }
+    }
+    else {
+        var lackOfAutomationInputValue = $('#new-reason-input').val();
+        if (lackOfAutomationInputValue==""){
+            $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
+            return;
+        }
+        else {
+            await addAutomationComments(automationDropdownValue,lackOfAutomationInputValue);
+            await addNewItemToChecklist(lackOfAutomationInputValue, lackOfAutomationReasonsListId);
+            $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValue));
+            ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
+        }
+    }
+}
+
+async function addAutomationComments(automationInfo, lackOfAutomationInfo){
+    setButtonsDisabledState(true);
+    $("#new-lack-of-automation-reason-error-message").text('');
+    await addComment("Автоматизация: ", automationInfo);
+    await addComment("Причины недостаточной автоматизации: ", lackOfAutomationInfo);
+    hideBlock('automation-cancel-button');
+    showBlock('automation-info');
+    hideBlock('lack-of-automation-info');
+    hideBlock('add-new-reason-block');
+    automationPopupStep = 1;
+    await refreshPopup(true, 'automationComment');
+    await refreshPopup(true, 'lackOfAutomationComment');
+    setButtonsDisabledState(false);
+    
 }
 
 async function addComment(prefix, value) {
@@ -269,9 +294,17 @@ async function addComment(prefix, value) {
 }
 
 function automationCancelButtonHandler() {
+    if (automationPopupStep == 2){
     showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
     hideBlock('automation-cancel-button');
     automationPopupStep = 1;
+}
+else {
+    $("#new-lack-of-automation-reason-error-message").text('');
+    automationPopupStep = 2;
+    showFirstAndHideSecondBlock('lack-of-automation-info','add-new-reason-block')
+    $('#new-reason-input').val("");
+}
 }
 /////////////////
 
