@@ -221,7 +221,7 @@ function automationButtonHandler() {
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
     hideBlock('lack-of-automation-info');
-    hideBlock('lack-of-automation-info-two');
+    hideBlock('lack-of-automation-info-part');
     automationPopupStep = 1;
 }
 
@@ -238,7 +238,7 @@ async function automationSubmitButtonHandler() {
         }
         else {
             showBlock('automation-cancel-button');
-            showFirstAndHideSecondBlock('lack-of-automation-info-two', 'automation-info');
+            showFirstAndHideSecondBlock('lack-of-automation-info-part', 'automation-info');
             automationPopupStep = 2;
         }
     }
@@ -253,13 +253,13 @@ async function automationSubmitButtonHandler() {
                 showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info');
             }
         } else {
-            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown-two').val();
+            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown-part').val();
             if (lackOfAutomationDropdownValue != "Указать другую причину") {
                 await addAutomationComments(automationDropdownValue, lackOfAutomationDropdownValue);
             }
             else {
                 automationPopupStep = 3;
-                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info-two');
+                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info-part');
             }
         }
     }
@@ -277,15 +277,15 @@ async function automationSubmitButtonHandler() {
                 ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
             }
         } else {
-            var lackOfAutomationInputValueTwo = $('#new-reason-input').val();
-            if (lackOfAutomationInputValueTwo == "") {
+            var lackOfAutomationInputValuepart = $('#new-reason-input').val();
+            if (lackOfAutomationInputValuepart == "") {
                 $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
                 return;
             }
             else {
-                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValueTwo);
-                await addNewItemToChecklist(lackOfAutomationInputValueTwo, lackOfAutomationReasonsListIdTwo);
-                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValueTwo));
+                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValuepart);
+                await addNewItemToChecklist(lackOfAutomationInputValuepart, lackOfAutomationReasonsListIdpart);
+                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValuepart));
                 ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
             }
         }
@@ -300,7 +300,7 @@ async function addAutomationComments(automationInfo, lackOfAutomationInfo) {
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
     hideBlock('lack-of-automation-info');
-    hideBlock('lack-of-automation-info-two');
+    hideBlock('lack-of-automation-info-part');
     hideBlock('add-new-reason-block');
     automationPopupStep = 1;
     await refreshPopup(true, 'automationComment');
@@ -326,7 +326,7 @@ function automationCancelButtonHandler() {
     if (automationPopupStep == 2) {
         showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
         hideBlock('automation-cancel-button');
-        hideBlock('lack-of-automation-info-two');
+        hideBlock('lack-of-automation-info-part');
         automationPopupStep = 1;
     }
     else {
