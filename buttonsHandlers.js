@@ -220,8 +220,8 @@ function automationButtonHandler() {
     showActiveTab('automation-block');
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
-    hideBlock('lack-of-automation-info');
-    hideBlock('lack-of-automation-info-part');
+    hideBlock('not-automated-info');
+    hideBlock('partially-automated-info');
     automationPopupStep = 1;
 }
 
@@ -233,59 +233,59 @@ async function automationSubmitButtonHandler() {
         }
         else if (automationDropdownValue == "Не покрыта функциональность") {
             showBlock('automation-cancel-button');
-            showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
+            showFirstAndHideSecondBlock('not-automated-info', 'automation-info');
             automationPopupStep = 2;
         }
         else {
             showBlock('automation-cancel-button');
-            showFirstAndHideSecondBlock('lack-of-automation-info-part', 'automation-info');
+            showFirstAndHideSecondBlock('partially-automated-info', 'automation-info');
             automationPopupStep = 2;
         }
     }
     else if (automationPopupStep == 2) {
         if (automationDropdownValue == "Не покрыта функциональность") {
-            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
-            if (lackOfAutomationDropdownValue != "Указать другую причину") {
-                await addAutomationComments(automationDropdownValue, lackOfAutomationDropdownValue);
+            var notAutomatedDropdownValue = $('#not-automated-reasons-dropdown').val();
+            if (notAutomatedDropdownValue != "Указать другую причину") {
+                await addAutomationComments(automationDropdownValue, notAutomatedDropdownValue);
             }
             else {
                 automationPopupStep = 3;
-                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info');
+                showFirstAndHideSecondBlock('add-new-reason-block', 'not-automated-info');
             }
         } else {
-            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown-part').val();
-            if (lackOfAutomationDropdownValue != "Указать другую причину") {
-                await addAutomationComments(automationDropdownValue, lackOfAutomationDropdownValue);
+            var partiallyAutomatedDropdownValue = $('#partially-automated-reasons-dropdown').val();
+            if (partiallyAutomatedDropdownValue != "Указать другую причину") {
+                await addAutomationComments(automationDropdownValue, partiallyAutomatedDropdownValue);
             }
             else {
                 automationPopupStep = 3;
-                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info-part');
+                showFirstAndHideSecondBlock('add-new-reason-block', 'partially-automated-info');
             }
         }
     }
     else {
         if (automationDropdownValue == "Не покрыта функциональность") {
-            var lackOfAutomationInputValue = $('#new-reason-input').val();
-            if (lackOfAutomationInputValue == "") {
+            var notAutomatedInputValue = $('#new-reason-input').val();
+            if (notAutomatedInputValue == "") {
                 $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
                 return;
             }
             else {
-                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValue);
-                await addNewItemToChecklist(lackOfAutomationInputValue, lackOfAutomationReasonsListId);
-                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValue));
+                await addAutomationComments(automationDropdownValue, notAutomatedInputValue);
+                await addNewItemToChecklist(notAutomatedInputValue, notAutomatedReasonsListId);
+                $("#not-automated-reasons-dropdown").append($('<option>').html(notAutomatedInputValue));
                 ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
             }
         } else {
-            var lackOfAutomationInputValuepart = $('#new-reason-input').val();
-            if (lackOfAutomationInputValuepart == "") {
+            var partiallyAutomatedInputValue = $('#new-reason-input').val();
+            if (partiallyAutomatedInputValue == "") {
                 $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
                 return;
             }
             else {
-                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValuepart);
-                await addNewItemToChecklist(lackOfAutomationInputValuepart, lackOfAutomationReasonsListIdpart);
-                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValuepart));
+                await addAutomationComments(automationDropdownValue, partiallyAutomatedInputValue);
+                await addNewItemToChecklist(partiallyAutomatedInputValue, partiallyAutomatedReasonsListId);
+                $("#partially-automated-reasons-dropdown").append($('<option>').html(partiallyAutomatedInputValue));
                 ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
             }
         }
@@ -299,8 +299,8 @@ async function addAutomationComments(automationInfo, lackOfAutomationInfo) {
     await addComment("Причины недостаточной автоматизации: ", lackOfAutomationInfo);
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
-    hideBlock('lack-of-automation-info');
-    hideBlock('lack-of-automation-info-part');
+    hideBlock('not-automated-info');
+    hideBlock('partially-automated-info');
     hideBlock('add-new-reason-block');
     automationPopupStep = 1;
     await refreshPopup(true, 'automationComment');
@@ -324,15 +324,15 @@ async function addComment(prefix, value) {
 
 function automationCancelButtonHandler() {
     if (automationPopupStep == 2) {
-        showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
+        showFirstAndHideSecondBlock('automation-info', 'not-automated-info');
         hideBlock('automation-cancel-button');
-        hideBlock('lack-of-automation-info-part');
+        hideBlock('partially-automated-info');
         automationPopupStep = 1;
     }
     else {
         $("#new-lack-of-automation-reason-error-message").text('');
         automationPopupStep = 2;
-        showFirstAndHideSecondBlock('lack-of-automation-info', 'add-new-reason-block')
+        showFirstAndHideSecondBlock('not-automated-info', 'add-new-reason-block')
         $('#new-reason-input').val("");
     }
 }

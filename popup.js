@@ -17,8 +17,8 @@ async function placePopup() {
             addDropdownOptions('test-stands-dropdown', testStandsNums);
             addDropdownOptions('testing-reviewers-dropdown', testersList);
             addDropdownOptions('automation-dropdown', automationTypesList);
-            addDropdownOptions('lack-of-automation-reasons-dropdown', lackOfAutomationTypesList);
-            addDropdownOptions('lack-of-automation-reasons-dropdown-part', lackOfAutomationTypespartList);
+            addDropdownOptions('not-automated-reasons-dropdown', notAutomatedReasonsList);
+            addDropdownOptions('partially-automated-reasons-dropdown', partiallyAutomatedReasonsList);
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }
