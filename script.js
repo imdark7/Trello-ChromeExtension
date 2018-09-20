@@ -1,8 +1,13 @@
 ﻿var target = document.getElementById('board');
 var card = document.getElementsByClassName('card-detail-window')[0];
 var flag = true
-
-setInterval(async function() {
+try {
+    CheckCardsStatus();
+    console.info('Вы великолепны!');
+} catch (err) {
+    console.error('Что-то не получилось :( Попроси Мишаню взглянуть  ' + err);
+}
+setInterval(async function () {
     if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
         flag = false;
         var windowSidebar = $('.window-sidebar').first();
@@ -10,8 +15,9 @@ setInterval(async function() {
         if (!document.getElementById('ext-popup-container')) {
             testersList = await getTestersList();
             testStandProblemsList = await getChecklistItems(testStandProblemsListId);
-            automationTypesList = await  getChecklistItems(automationInfoListId);
-            lackOfAutomationTypesList =  await getChecklistItems(lackOfAutomationReasonsListId);
+            automationTypesList = await getChecklistItems(automationInfoListId);
+            lackOfAutomationTypesList = await getChecklistItems(lackOfAutomationReasonsListId);
+            testValueAutomationReasonsList = await getChecklistItems(testValueAutomationReasons);
             await placePopup();
         };
         placeLinks(windowSidebar);
@@ -22,8 +28,8 @@ setInterval(async function() {
 
 function placeLinks(block) {
     var testingBlock = $('<div>', {
-            class: 'window-module u-clearfix'
-        })
+        class: 'window-module u-clearfix'
+    })
         .append($('<h3>', {
             text: 'Тестирование'
         }))

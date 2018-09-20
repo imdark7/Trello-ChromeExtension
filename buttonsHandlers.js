@@ -84,6 +84,7 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
     await refreshPopup();
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
     await addTrelloCardComment(await cardIdPromise, 'Участники: ' + await getCardMembersString());
+    addCardLabelsTestingEnd();
 }
 ////////////////////////
 
@@ -241,7 +242,7 @@ async function automationSubmitButtonHandler() {
      {  
          var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
          if (lackOfAutomationDropdownValue != "Указать другую причину"){
-            await addAutomationComments(automationDropdownValue,lackOfAutomationInfo);
+            await addAutomationComments(automationDropdownValue,lackOfAutomationDropdownValue);
          }
          else{
              automationPopupStep = 3;
