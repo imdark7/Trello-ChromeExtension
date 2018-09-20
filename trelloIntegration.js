@@ -223,3 +223,69 @@ async function updateTrelloCardComment(actionId, newText) {
     await fetch(updateCommentUrl, options);
     cardActions = await getCardsActions();
 }
+
+async function addCardLabelsTestingProcess(serviseCardId) {
+    var options = {
+            method: "PUT"
+    };
+    var setLabelsFromInProgressListUrl = 'https://api.trello.com/1/cards/' + serviseCardId + '?idLabels=5ba1d40bf933f814156d7f79' +
+            '&key=' + apiKey +
+            '&token=' + apiToken;
+    await fetch(setLabelsFromInProgressListUrl, options).then((resp) => resp.json())
+            .then(function (data) {
+                    return data;
+            })
+}
+
+async function addCardLabelsTestingEnd() {
+    findServiceCard().then((id) => addCardLabelsTestingProcessEnd(id));
+}
+
+async function addCardLabelsTestingProcessEnd(serviseCardId) {
+    deleteLabels(serviseCardId);
+    var options = {
+            method: "PUT"
+    };
+    var setLabelsFromInProgressListUrl = 'https://api.trello.com/1/cards/' + serviseCardId + '?idLabels=5ba1d3ab4e2a3f6912b11e76' +
+            '&key=' + apiKey +
+            '&token=' + apiToken;
+    await fetch(setLabelsFromInProgressListUrl, options).then((resp) => resp.json())
+            .then(function (data) {
+                    return data;
+            })
+}
+
+async function deleteLabels(serviseCardId) {
+    var options = {
+            method: "DELETE"
+    };
+    var setLabelsFromInProgressListUrl = 'https://api.trello.com/1/cards/' + serviseCardId + '/idLabels/5ba1d40bf933f814156d7f79' +
+            '&key=' + apiKey +
+            '&token=' + apiToken;
+    await fetch(setLabelsFromInProgressListUrl, options).then((resp) => resp.json())
+            .then(function (data) {
+                    return data;
+            })
+}
+
+async function getAllServiceCardName() { // получить список всех сервисных карт
+    var options = {
+            method: "GET"
+    };
+    var getCardsFromInProgressListUrl = 'https://api.trello.com/1/lists/' + inProgressListId + '/cards?fields=id,name,labels,shortLink' +
+            '&key=' + apiKey +
+            '&token=' + apiToken;
+    cards = await fetch(getCardsFromInProgressListUrl, options).then((resp) => resp.json())
+            .then(function (data) {
+                    return data;
+            })
+    var AllCards = new Array();
+    for (var i in cards) {
+            var propirtyCards = new Array();
+            propirtyCards[0] = cards[i].shortLink;
+            propirtyCards[1] = cards[i].name;
+            propirtyCards[2] = (cards[i].labels.length > 0) ? cards[i].labels[0].id : 0;
+            AllCards[i] = propirtyCards;
+    }
+    return AllCards
+}

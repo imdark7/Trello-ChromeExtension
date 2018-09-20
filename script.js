@@ -1,12 +1,9 @@
 ﻿var target = document.getElementById('board');
 var card = document.getElementsByClassName('card-detail-window')[0];
 var flag = true
-try {
-    CheckCardsStatus();
-    console.info('Вы великолепны!');
-} catch (err) {
-    console.error('Что-то не получилось :( Попроси Мишаню взглянуть  ' + err);
-}
+
+CheckCardsStatus();
+
 setInterval(async function () {
     if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
         flag = false;
