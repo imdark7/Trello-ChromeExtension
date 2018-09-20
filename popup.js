@@ -6,8 +6,7 @@ var cardActions;
 
 async function placePopup() {
     $.get(chrome.runtime.getURL('Popup.htm'),
-        function(data) {
-
+        function (data) {
             $('#classic').append($('<div>').html(data));
             addDropdownOptions('events-dropdown', eventsDictionary);
             addInfoFromServiveCardBlocks('existingCommentsBlock', eventsDictionary);
@@ -17,16 +16,17 @@ async function placePopup() {
             addDropdownOptions('problems-dropdown', [otherProblemValue]);
             addDropdownOptions('test-stands-dropdown', testStandsNums);
             addDropdownOptions('testing-reviewers-dropdown', testersList);
-            addDropdownOptions('automation-dropdown',  automationTypesList);
+            addDropdownOptions('automation-dropdown', automationTypesList);
             addDropdownOptions('lack-of-automation-reasons-dropdown', lackOfAutomationTypesList);
+            addDropdownOptions('lack-of-automation-reasons-dropdown-two', lackOfAutomationTypesTwoList);
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }
-			 addTabsIcons();
+            addTabsIcons();
             $('#add-test-stands-problem-button').click(() => addProblemsInfoButtonHandler());
             $('#ext-popup-close').click(() => hidePopup());
             $('#add-dates-info-button').click(() => addDatesInfoButtonHandler())
-			setTabButtonActiveColor("add-dates-info-button");
+            setTabButtonActiveColor("add-dates-info-button");
             $('#add-automation-info-button').click(() => automationButtonHandler());
             $('#problems-block-submit-button').click(() => addProblemsInfoSubmitButtonHandler());
             $('#problems-block-cancel-button').click(() => addProblemsInfoCancelButtonHandler());
@@ -41,44 +41,45 @@ async function placePopup() {
             $('#pull-members-from-card').click(() => pullMembersFromCardButtonHandler());
         }
     );
-    $(document).mouseup(function(e) {
+    $(document).mouseup(function (e) {
         var container = $("#ext-popup");
         if (container.has(e.target).length === 0) {
             container.hide();
         }
     });
 
-    $(document).keydown(function(e) {
+    $(document).keydown(function (e) {
         if (e.key == 'Escape') {
             $("#ext-popup").hide();
         }
     });
 }
 
-function setTabButtonActiveColor(activeButtonId){
-	const activeButtonColor = "#b6bbbf";
-	const inactiveButtonColor = "#edeff0";
-	tabButtonsId.forEach(function(id){
-		var color = (id==activeButtonId)? activeButtonColor : inactiveButtonColor;
-					$("#"+id).css("background-color",color);
-			})
-	
+function setTabButtonActiveColor(activeButtonId) {
+    const activeButtonColor = "#b6bbbf";
+    const inactiveButtonColor = "#edeff0";
+    tabButtonsId.forEach(function (id) {
+        var color = (id == activeButtonId) ? activeButtonColor : inactiveButtonColor;
+        $("#" + id).css("background-color", color);
+    })
+
 }
-function addTabsIcons(){
-	tabButtonsId.forEach(function(id){
-		$('#'+id).append($('<span>', {
-					class: 'icon-sm plugin-icon',
-					css: {
-							'min-height':'35px',
-							'min-width':'35px',
-							display: 'inline-block',
-							marginLeft : '5px',
-							'background-size': '30px 30px',
-            backgroundImage: `url(${chrome.runtime.getURL(`icons/${id}-icon.png`)})`
-					}
-				}))
-		
-	})
+
+function addTabsIcons() {
+    tabButtonsId.forEach(function (id) {
+        $('#' + id).append($('<span>', {
+            class: 'icon-sm plugin-icon',
+            css: {
+                'min-height': '35px',
+                'min-width': '35px',
+                display: 'inline-block',
+                marginLeft: '5px',
+                'background-size': '30px 30px',
+                backgroundImage: `url(${chrome.runtime.getURL(`icons/${id}-icon.png`)})`
+            }
+        }))
+
+    })
 }
 
 function addDropdownOptions(dropdownId, optionsArray) {
@@ -204,13 +205,13 @@ function getKeyByValue(obj, value) {
     return Object.keys(obj).find(key => obj[key] === value);
 }
 
-function showActiveTab(activeTabId){
-	tabsIds.forEach(function(tabId){
-		if (tabId==activeTabId){
-			 showBlock(tabId);
-		}
-		else {
-			 hideBlock(tabId);
-		}
-	})
+function showActiveTab(activeTabId) {
+    tabsIds.forEach(function (tabId) {
+        if (tabId == activeTabId) {
+            showBlock(tabId);
+        }
+        else {
+            hideBlock(tabId);
+        }
+    })
 }

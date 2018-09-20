@@ -1,9 +1,9 @@
 //Сохранение даты события
 function addDatesInfoButtonHandler() {
-	setTabButtonActiveColor("add-dates-info-button");
-	showActiveTab('testing-dates-input-block');
+    setTabButtonActiveColor("add-dates-info-button");
+    showActiveTab('testing-dates-input-block');
     showBlock('save-comment-block');
-	hideBlock('edit-comment-confirmation-block');
+    hideBlock('edit-comment-confirmation-block');
     $("#error-message").text('');
 }
 
@@ -90,11 +90,11 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
 
 //Добавление проблем с тачками
 function addProblemsInfoButtonHandler() {
-	setTabButtonActiveColor("add-test-stands-problem-button");
+    setTabButtonActiveColor("add-test-stands-problem-button");
     showActiveTab('problems-block');
     $("#problem-comment-input").val('')
-	showBlock('fill-problems-info-block');
-    hideBlock ("add-new-problem-block");
+    showBlock('fill-problems-info-block');
+    hideBlock("add-new-problem-block");
     hideBlock('problems-block-cancel-button');
     $("#new-problem-error-message").text('');
     standProblemsTabStep = 1;
@@ -165,7 +165,7 @@ async function removeProblemIconHandler(id) {
 
 //Добавление ревьюеров
 function addReviwersButtonHandler() {
-	setTabButtonActiveColor("add-reviewers-button");
+    setTabButtonActiveColor("add-reviewers-button");
     showActiveTab('check-list-review-block');
     $("#reviewers-error-message").text('');
 }
@@ -216,55 +216,83 @@ function getActiveReviewers() {
 
 //Автоматизация
 function automationButtonHandler() {
-		setTabButtonActiveColor("add-automation-info-button");
+    setTabButtonActiveColor("add-automation-info-button");
     showActiveTab('automation-block');
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
-	hideBlock('lack-of-automation-info');
+    hideBlock('lack-of-automation-info');
+    hideBlock('lack-of-automation-info-two');
     automationPopupStep = 1;
 }
 
 async function automationSubmitButtonHandler() {
-
     var automationDropdownValue = $('#automation-dropdown').val();
     if (automationPopupStep == 1) {
-        if (automationDropdownValue == "Покрыли все необходимые сценарии") {
-           await addAutomationComments(automationDropdownValue,"");
-        } 
-        else
-        {
-            showBlock('automation-cancel-button');
-			showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
-			automationPopupStep = 2;
+        if (automationDropdownValue == "Покрыта полностью функциональность") {
+            await addAutomationComments(automationDropdownValue, "");
         }
-    }
-     else if (automationPopupStep == 2)
-     {  
-         var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
-         if (lackOfAutomationDropdownValue != "Указать другую причину"){
-            await addAutomationComments(automationDropdownValue,lackOfAutomationDropdownValue);
-         }
-         else{
-             automationPopupStep = 3;
-             showFirstAndHideSecondBlock('add-new-reason-block','lack-of-automation-info');
-         }
-    }
-    else {
-        var lackOfAutomationInputValue = $('#new-reason-input').val();
-        if (lackOfAutomationInputValue==""){
-            $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
-            return;
+        else if (automationDropdownValue == "Не покрыта функциональность") {
+            showBlock('automation-cancel-button');
+            showFirstAndHideSecondBlock('lack-of-automation-info', 'automation-info');
+            automationPopupStep = 2;
         }
         else {
-            await addAutomationComments(automationDropdownValue,lackOfAutomationInputValue);
-            await addNewItemToChecklist(lackOfAutomationInputValue, lackOfAutomationReasonsListId);
-            $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValue));
-            ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
+            showBlock('automation-cancel-button');
+            showFirstAndHideSecondBlock('lack-of-automation-info-two', 'automation-info');
+            automationPopupStep = 2;
+        }
+    }
+    else if (automationPopupStep == 2) {
+        if (automationDropdownValue == "Не покрыта функциональность") {
+            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown').val();
+            if (lackOfAutomationDropdownValue != "Указать другую причину") {
+                await addAutomationComments(automationDropdownValue, lackOfAutomationDropdownValue);
+            }
+            else {
+                automationPopupStep = 3;
+                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info');
+            }
+        } else {
+            var lackOfAutomationDropdownValue = $('#lack-of-automation-reasons-dropdown-two').val();
+            if (lackOfAutomationDropdownValue != "Указать другую причину") {
+                await addAutomationComments(automationDropdownValue, lackOfAutomationDropdownValue);
+            }
+            else {
+                automationPopupStep = 3;
+                showFirstAndHideSecondBlock('add-new-reason-block', 'lack-of-automation-info-two');
+            }
+        }
+    }
+    else {
+        if (automationDropdownValue == "Не покрыта функциональность") {
+            var lackOfAutomationInputValue = $('#new-reason-input').val();
+            if (lackOfAutomationInputValue == "") {
+                $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
+                return;
+            }
+            else {
+                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValue);
+                await addNewItemToChecklist(lackOfAutomationInputValue, lackOfAutomationReasonsListId);
+                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValue));
+                ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
+            }
+        } else {
+            var lackOfAutomationInputValueTwo = $('#new-reason-input').val();
+            if (lackOfAutomationInputValueTwo == "") {
+                $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
+                return;
+            }
+            else {
+                await addAutomationComments(automationDropdownValue, lackOfAutomationInputValueTwo);
+                await addNewItemToChecklist(lackOfAutomationInputValueTwo, lackOfAutomationReasonsListIdTwo);
+                $("#lack-of-automation-reasons-dropdown").append($('<option>').html(lackOfAutomationInputValueTwo));
+                ///Тут добавить добавление коммента, добавление новой причины в дропдаун, добавление новой причины в общий дропдаун
+            }
         }
     }
 }
 
-async function addAutomationComments(automationInfo, lackOfAutomationInfo){
+async function addAutomationComments(automationInfo, lackOfAutomationInfo) {
     setButtonsDisabledState(true);
     $("#new-lack-of-automation-reason-error-message").text('');
     await addComment("Автоматизация: ", automationInfo);
@@ -272,12 +300,12 @@ async function addAutomationComments(automationInfo, lackOfAutomationInfo){
     hideBlock('automation-cancel-button');
     showBlock('automation-info');
     hideBlock('lack-of-automation-info');
+    hideBlock('lack-of-automation-info-two');
     hideBlock('add-new-reason-block');
     automationPopupStep = 1;
     await refreshPopup(true, 'automationComment');
     await refreshPopup(true, 'lackOfAutomationComment');
     setButtonsDisabledState(false);
-    
 }
 
 async function addComment(prefix, value) {
@@ -295,36 +323,37 @@ async function addComment(prefix, value) {
 }
 
 function automationCancelButtonHandler() {
-    if (automationPopupStep == 2){
-    showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
-    hideBlock('automation-cancel-button');
-    automationPopupStep = 1;
-}
-else {
-    $("#new-lack-of-automation-reason-error-message").text('');
-    automationPopupStep = 2;
-    showFirstAndHideSecondBlock('lack-of-automation-info','add-new-reason-block')
-    $('#new-reason-input').val("");
-}
+    if (automationPopupStep == 2) {
+        showFirstAndHideSecondBlock('automation-info', 'lack-of-automation-info');
+        hideBlock('automation-cancel-button');
+        hideBlock('lack-of-automation-info-two');
+        automationPopupStep = 1;
+    }
+    else {
+        $("#new-lack-of-automation-reason-error-message").text('');
+        automationPopupStep = 2;
+        showFirstAndHideSecondBlock('lack-of-automation-info', 'add-new-reason-block')
+        $('#new-reason-input').val("");
+    }
 }
 /////////////////
 
 function setButtonsDisabledState(isDisable) {
-	
-	tabsIds.forEach(function(id){
-		 var buttons= $('#'+id).find($('a'));
-		  isDisable ? buttons.hide() : buttons.show();
-	});
-	buttonsIds.forEach(function(id){
-		$('#'+id).prop('disabled', isDisable);
-	});
+
+    tabsIds.forEach(function (id) {
+        var buttons = $('#' + id).find($('a'));
+        isDisable ? buttons.hide() : buttons.show();
+    });
+    buttonsIds.forEach(function (id) {
+        $('#' + id).prop('disabled', isDisable);
+    });
 }
 
 //Редактирование участников
 
 function editMembersButtonHandler() {
-	setTabButtonActiveColor("edit-members-info-button");
-	showActiveTab('card-members-edit-block');
+    setTabButtonActiveColor("edit-members-info-button");
+    showActiveTab('card-members-edit-block');
 }
 
 async function pullMembersFromCardButtonHandler() {
@@ -346,7 +375,7 @@ async function pullMembersFromCardButtonHandler() {
 
 async function removeMember(blockNum, nameToRemove, commentId) {
     setButtonsDisabledState(true);
-	var commentCurrentText = await readCommentText(commentId)
+    var commentCurrentText = await readCommentText(commentId)
     await updateTrelloCardComment(commentId, commentCurrentText.replace(nameToRemove + ";", "").trim());
     $("#member-" + blockNum).remove();
     refreshPopup(true, 'members');

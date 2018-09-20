@@ -14,7 +14,7 @@ setInterval(async function () {
             testStandProblemsList = await getChecklistItems(testStandProblemsListId);
             automationTypesList = await getChecklistItems(automationInfoListId);
             lackOfAutomationTypesList = await getChecklistItems(lackOfAutomationReasonsListId);
-            testValueAutomationReasonsList = await getChecklistItems(testValueAutomationReasons);
+            lackOfAutomationTypesTwoList = await getChecklistItems(lackOfAutomationReasonsListIdTwo);
             await placePopup();
         };
         placeLinks(windowSidebar);
