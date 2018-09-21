@@ -8,9 +8,9 @@ function BackgroundCardChange(allCardsID) {
                                 result = 1;
                                 cnt++;
                                 var CardID = links[i];
-                                CardID.style.backgroundColor = '#7fc7ff';
+                                CardID.style.backgroundColor = '#99d2ff';
                                 if (allCardsID[j][2] == '5ba1d3ab4e2a3f6912b11e76') {
-                                        CardID.style.backgroundColor = '#77dd77';
+                                        CardID.style.backgroundColor = '#7cd55b';
                                 }
                         }
                 }
