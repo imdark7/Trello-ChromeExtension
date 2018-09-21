@@ -2,9 +2,8 @@
 var card = document.getElementsByClassName('card-detail-window')[0];
 var flag = true
 
-CheckCardsStatus();
-
 setInterval(async function () {
+    CheckCardsStatus();
     if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
         flag = false;
         var windowSidebar = $('.window-sidebar').first();
