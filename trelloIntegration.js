@@ -112,7 +112,6 @@ async function createCardOnServiceBoard() {
         .then(function (data) {
             return data.shortLink;
         })
-    addCardLabelsTestingProcess(newCardId);
     return newCardId;
 }
 
@@ -242,7 +241,6 @@ async function addCardLabelsTestingEnd() {
 }
 
 async function addCardLabelsTestingProcessEnd(serviseCardId) {
-    deleteLabels(serviseCardId);
     var options = {
             method: "PUT"
     };
