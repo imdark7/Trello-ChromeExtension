@@ -41,8 +41,7 @@ async function submitPopupHandler() {
                 if ($('#readyForTestingDate').length > 0) {
                     if (eventType == "Закончили тестирование") {
                         showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText);
-                        addCardLabelsTestingEnd();
-                    } else {
+                        } else {
                         setButtonsDisabledState(true);
                         showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
                         await addTrelloCardComment(await serviceCardIdPromise, commentText);
@@ -85,6 +84,7 @@ async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
     await refreshPopup();
     await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
     await addTrelloCardComment(await cardIdPromise, 'Участники: ' + await getCardMembersString());
+    addCardLabelsTestingEnd();
 }
 ////////////////////////
 
