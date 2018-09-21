@@ -223,19 +223,6 @@ async function updateTrelloCardComment(actionId, newText) {
     cardActions = await getCardsActions();
 }
 
-async function addCardLabelsTestingProcess(serviseCardId) {
-    var options = {
-            method: "PUT"
-    };
-    var setLabelsFromInProgressListUrl = 'https://api.trello.com/1/cards/' + serviseCardId + '?idLabels=5ba1d40bf933f814156d7f79' +
-            '&key=' + apiKey +
-            '&token=' + apiToken;
-    await fetch(setLabelsFromInProgressListUrl, options).then((resp) => resp.json())
-            .then(function (data) {
-                    return data;
-            })
-}
-
 async function addCardLabelsTestingEnd() {
     findServiceCard().then((id) => addCardLabelsTestingProcessEnd(id));
 }
