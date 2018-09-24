@@ -1,9 +1,9 @@
 ﻿var target = document.getElementById('board');
 var card = document.getElementsByClassName('card-detail-window')[0];
 var flag = true
+var countBackground = 0;
 
 setInterval(async function () {
-    CheckCardsStatus();
     if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
         flag = false;
         var windowSidebar = $('.window-sidebar').first();
@@ -21,6 +21,16 @@ setInterval(async function () {
         flag = true;
     }
 }, 850); //todo переписать на отлов событий
+
+setInterval(async function () {
+    if (countBackground == 1){
+        CheckCardsStatus();
+    }
+    countBackground++;
+    if (countBackground == 500){
+        countBackground = 0;
+    }
+}, 600);
 
 function placeLinks(block) {
     var testingBlock = $('<div>', {
