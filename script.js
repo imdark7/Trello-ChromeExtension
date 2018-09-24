@@ -23,13 +23,8 @@ setInterval(async function () {
 }, 850); //todo переписать на отлов событий
 
 setInterval(async function () {
-    if (countBackground == 1){
-        CheckCardsStatus();
-    }
-    countBackground++;
-    if (countBackground == 500){
-        countBackground = 0;
-    }
+    (countBackground == 1) ? CheckCardsStatus() : countBackground;
+    (countBackground == 500) ? countBackground = 0 : countBackground++;
 }, 600);
 
 function placeLinks(block) {
