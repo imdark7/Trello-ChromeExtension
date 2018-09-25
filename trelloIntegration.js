@@ -112,7 +112,7 @@ async function createCardOnServiceBoard() {
         .then(function (data) {
             return data.shortLink;
         })
-    countBackground = 0;
+    timeCounterСheckCardsStatus = 0;
     return newCardId;
 }
 
@@ -226,7 +226,7 @@ async function updateTrelloCardComment(actionId, newText) {
 
 async function addCardLabelsTestingEnd() {
     findServiceCard().then((id) => addCardLabelsTestingProcessEnd(id));
-    countBackground = 0;
+    timeCounterСheckCardsStatus = 0;
 }
 
 async function addCardLabelsTestingProcessEnd(serviseCardId) {

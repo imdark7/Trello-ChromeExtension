@@ -17,7 +17,3 @@ function BackgroundCardChange(allCardsID) {
         }
         return true
 }
-
-async function CheckCardsStatus() {
-        getAllServiceCardName().then((arr) => BackgroundCardChange(arr));
-}

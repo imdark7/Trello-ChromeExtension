@@ -1,7 +1,8 @@
 ﻿var target = document.getElementById('board');
 var card = document.getElementsByClassName('card-detail-window')[0];
 var flag = true
-var countBackground = 0;
+var timeCounterСheckCardsStatus = 0;
+var statusCards =  getAllServiceCardName();
 
 setInterval(async function () {
     if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
@@ -23,9 +24,10 @@ setInterval(async function () {
 }, 850); //todo переписать на отлов событий
 
 setInterval(async function () {
-    (countBackground == 1) ? CheckCardsStatus() : countBackground;
-    (countBackground == 500) ? countBackground = 0 : countBackground++;
-}, 600);
+    statusCards.then((arr) => BackgroundCardChange(arr));
+    (timeCounterСheckCardsStatus == 1) ? statusCards = getAllServiceCardName() : timeCounterСheckCardsStatus;
+    (timeCounterСheckCardsStatus == 600) ? timeCounterСheckCardsStatus = 0 : timeCounterСheckCardsStatus++;
+}, 1000);
 
 function placeLinks(block) {
     var testingBlock = $('<div>', {
