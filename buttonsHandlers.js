@@ -1,9 +1,10 @@
 //Сохранение даты события
 function addDatesInfoButtonHandler() {
     setTabButtonActiveColor("add-dates-info-button");
-    showActiveTab('testing-dates-input-block');
+    showActiveTab('testing-dates-block');
     showBlock('save-comment-block');
     hideBlock('edit-comment-confirmation-block');
+    showFirstAndHideSecondBlock('testing-dates-input-block', 'reasons-of-delaying-block');
     $("#error-message").text('');
 }
 
@@ -20,12 +21,11 @@ async function submitPopupHandler() {
         showBlock('save-comment-block');
         return;
     }
-
     var commentText = eventType + ": " + dateTime.toFullDateString();
     if ($(`#${getKeyByValue(eventsDictionary, eventType)}`).length > 0) {
         var commentInfo = doesTheCommentExist(eventType)
         if (commentInfo) {
-            showEditingConfirmationButtons(commentInfo[0], commentText);
+            showEditingConfirmationButtons(commentInfo[0], commentText, dateTime);
         } else {
             if (eventType == eventsDictionary.readyForTestingDate) {
                 setButtonsDisabledState(true);
@@ -40,8 +40,8 @@ async function submitPopupHandler() {
                 var serviceCardIdPromise = findServiceCard();
                 if ($('#readyForTestingDate').length > 0) {
                     if (eventType == "Закончили тестирование") {
-                        showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText);
-                        } else {
+                        showEndOfTestingConfirmationButtons(serviceCardIdPromise, commentText, dateTime);
+                    } else {
                         setButtonsDisabledState(true);
                         showComment(getKeyByValue(eventsDictionary, eventType), dateTime.toFullDateString());
                         await addTrelloCardComment(await serviceCardIdPromise, commentText);
@@ -55,13 +55,17 @@ async function submitPopupHandler() {
     }
 }
 
-async function commentEditingSaveButtonHandler(commentInfo, newText) {
+async function commentEditingSaveButtonHandler(commentInfo, newText, newDate) {
     setButtonsDisabledState(true);
     var parsedComment = newText.split(': ');
     showComment(getKeyByValue(eventsDictionary, parsedComment[0]), parsedComment[1])
     commentEditingCancelButtonHandler();
     await updateTrelloCardComment(commentInfo.id, newText);
+    setButtonsDisabledState(false);
     if (commentInfo.text.includes(eventsDictionary.endOfTestingDate)) {
+        var endOfTestingEstimateDate = getDateIfExist(eventsDictionary.endOfTestingEstimateDate);
+        if (newDate > endOfTestingEstimateDate)
+            showDelayReasonsBlock();
         await updateTrelloCardComment(doesTheCommentExist('Баги')[0].id, 'Баги: ' + await getCardBugAmount());
         await updateTrelloCardComment(doesTheCommentExist('Участники')[0].id, 'Участники: ' + await getCardMembersString())
     }
@@ -75,17 +79,69 @@ function commentEditingCancelButtonHandler() {
     $('#error-message').text('');
 }
 
-async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText) {
+async function endOfTestingConfirmButtonHandler(cardIdPromise, commentText, endOfTestingDate) {
     setButtonsDisabledState(true);
     var parsedComment = commentText.split(': ');
     showComment(getKeyByValue(eventsDictionary, parsedComment[0]), parsedComment[1])
     commentEditingCancelButtonHandler();
     await addTrelloCardComment(await cardIdPromise, commentText);
-    await refreshPopup();
-    await addTrelloCardComment(await cardIdPromise, 'Баги: ' + await getCardBugAmount());
-    await addTrelloCardComment(await cardIdPromise, 'Участники: ' + await getCardMembersString());
+    setButtonsDisabledState(false);
+    var endOfTestingEstimateDate = getDateIfExist(eventsDictionary.endOfTestingEstimateDate);
+    if (endOfTestingDate > endOfTestingEstimateDate)
+        showDelayReasonsBlock();
+    await addComment('Баги: ', await getCardBugAmount());
+    await addComment('Участники: ', await getCardMembersString());
     addCardLabelsTestingEnd();
+
 }
+
+function showDelayReasonsBlock() {
+    showFirstAndHideSecondBlock('reasons-of-delaying-block', 'testing-dates-input-block');
+    showFirstAndHideSecondBlock('reasons-of-delaying-dropdown', 'add-new-reason-of-delaying-block');
+    $("#reason-of-delaying-block-error-message").text('');
+    reasonsOfDelayingBlockStep = 1;
+}
+
+async function reasonsOfDelayingBlockSubmitButtonHandler() {
+    var reason;
+    if (reasonsOfDelayingBlockStep == 1) {
+        needToAddReason = false;
+        var dropdownValue = $('#reasons-of-delaying-dropdown').val();
+        if (dropdownValue == otherReason) {
+            showFirstAndHideSecondBlock('add-new-reason-of-delaying-block', 'reasons-of-delaying-dropdown');
+            reasonsOfDelayingBlockStep = 2;
+            return;
+        } else reason = dropdownValue;
+    } else {
+        reason = $('#new-reason-of-delaying-input').val();
+        if (reason == "") {
+            $("#reason-of-delaying-block-error-message").text('Введите описание причины задержки или вернитесь назад и выберите значение из дропдауна');
+            return;
+        }
+    }
+    setButtonsDisabledState(true);
+    var serviceCardId = await findServiceCard();
+
+    await addComment("Причина задержки: ", reason);
+    setButtonsDisabledState(false);
+    showFirstAndHideSecondBlock('testing-dates-input-block', 'reasons-of-delaying-block');
+    if (reasonsOfDelayingBlockStep == 2) {
+        await addNewItemToChecklist(reason, reasonsOfDelayListId);
+        $("#reasons-of-delaying-dropdown").append($('<option>').html(reason));
+    }
+    addExistingComment('Причина задержки', 'reasonOfDelay')
+}
+
+function reasonsOfDelayingBlockCancelButtonHandler() {
+    if (reasonsOfDelayingBlockStep == 1) {
+        showFirstAndHideSecondBlock('testing-dates-input-block', 'reasons-of-delaying-block');
+    } else {
+        reasonsOfDelayingBlockStep = 1;
+        showFirstAndHideSecondBlock('reasons-of-delaying-dropdown', 'add-new-reason-of-delaying-block');
+        $("#reason-of-delaying-block-error-message").text('');
+    }
+}
+
 ////////////////////////
 
 //Добавление проблем с тачками
@@ -110,8 +166,7 @@ async function addProblemsInfoSubmitButtonHandler() {
             showFirstAndHideSecondBlock("add-new-problem-block", "fill-problems-info-block");
             showBlock('problems-block-cancel-button');
             standProblemsTabStep = 2;
-        }
-        else {
+        } else {
             $("#new-problem-error-message").text('');
             setButtonsDisabledState(true);
             var serviceCardId = await findServiceCard();
@@ -122,8 +177,7 @@ async function addProblemsInfoSubmitButtonHandler() {
             showProblems();
             setButtonsDisabledState(false);
         }
-    }
-    else {
+    } else {
         var newProblemDescription = $('#new-problem-input').val();
         if (newProblemDescription == "") {
             $("#new-problem-error-message").text('Введите описание проблемы или вернитесь назад и выберите значение из дропдауна');
@@ -230,25 +284,21 @@ async function automationSubmitButtonHandler() {
     if (automationPopupStep == 1) {
         if (automationDropdownValue == "Покрыта полностью функциональность") {
             await addAutomationComments(automationDropdownValue, "");
-        }
-        else if (automationDropdownValue == "Не покрыта функциональность") {
+        } else if (automationDropdownValue == "Не покрыта функциональность") {
             showBlock('automation-cancel-button');
             showFirstAndHideSecondBlock('not-automated-info', 'automation-info');
             automationPopupStep = 2;
-        }
-        else {
+        } else {
             showBlock('automation-cancel-button');
             showFirstAndHideSecondBlock('partially-automated-info', 'automation-info');
             automationPopupStep = 2;
         }
-    }
-    else if (automationPopupStep == 2) {
+    } else if (automationPopupStep == 2) {
         if (automationDropdownValue == "Не покрыта функциональность") {
             var notAutomatedDropdownValue = $('#not-automated-reasons-dropdown').val();
             if (notAutomatedDropdownValue != "Указать другую причину") {
                 await addAutomationComments(automationDropdownValue, notAutomatedDropdownValue);
-            }
-            else {
+            } else {
                 automationPopupStep = 3;
                 showFirstAndHideSecondBlock('add-new-reason-block', 'not-automated-info');
             }
@@ -256,21 +306,18 @@ async function automationSubmitButtonHandler() {
             var partiallyAutomatedDropdownValue = $('#partially-automated-reasons-dropdown').val();
             if (partiallyAutomatedDropdownValue != "Указать другую причину") {
                 await addAutomationComments(automationDropdownValue, partiallyAutomatedDropdownValue);
-            }
-            else {
+            } else {
                 automationPopupStep = 3;
                 showFirstAndHideSecondBlock('add-new-reason-block', 'partially-automated-info');
             }
         }
-    }
-    else {
+    } else {
         if (automationDropdownValue == "Не покрыта функциональность") {
             var notAutomatedInputValue = $('#new-reason-input').val();
             if (notAutomatedInputValue == "") {
                 $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
                 return;
-            }
-            else {
+            } else {
                 await addAutomationComments(automationDropdownValue, notAutomatedInputValue);
                 await addNewItemToChecklist(notAutomatedInputValue, notAutomatedReasonsListId);
                 $("#not-automated-reasons-dropdown").append($('<option>').html(notAutomatedInputValue));
@@ -281,8 +328,7 @@ async function automationSubmitButtonHandler() {
             if (partiallyAutomatedInputValue == "") {
                 $("#new-lack-of-automation-reason-error-message").text('Введите причину или вернитесь назад и выберите значение из дропдауна');
                 return;
-            }
-            else {
+            } else {
                 await addAutomationComments(automationDropdownValue, partiallyAutomatedInputValue);
                 await addNewItemToChecklist(partiallyAutomatedInputValue, partiallyAutomatedReasonsListId);
                 $("#partially-automated-reasons-dropdown").append($('<option>').html(partiallyAutomatedInputValue));
@@ -328,8 +374,7 @@ function automationCancelButtonHandler() {
         hideBlock('automation-cancel-button');
         hideBlock('partially-automated-info');
         automationPopupStep = 1;
-    }
-    else {
+    } else {
         $("#new-lack-of-automation-reason-error-message").text('');
         automationPopupStep = 2;
         showFirstAndHideSecondBlock('not-automated-info', 'add-new-reason-block')
@@ -340,14 +385,15 @@ function automationCancelButtonHandler() {
 
 function setButtonsDisabledState(isDisable) {
 
-    tabsIds.forEach(function (id) {
+    tabsIds.forEach(function(id) {
         var buttons = $('#' + id).find($('a'));
         isDisable ? buttons.hide() : buttons.show();
     });
-    buttonsIds.forEach(function (id) {
+    buttonsIds.forEach(function(id) {
         $('#' + id).prop('disabled', isDisable);
     });
 }
+
 
 //Редактирование участников
 

@@ -1,8 +1,10 @@
 var currentProblems;
 var automationPopupStep;
 var standProblemsTabStep;
+var reasonsOfDelayingBlockStep;
 var testersList;
 var cardActions;
+var otherReason = "Указать другую причину";
 
 async function placePopup() {
     $.get(chrome.runtime.getURL('Popup.htm'),
@@ -18,7 +20,11 @@ async function placePopup() {
             addDropdownOptions('testing-reviewers-dropdown', testersList);
             addDropdownOptions('automation-dropdown', automationTypesList);
             addDropdownOptions('not-automated-reasons-dropdown', notAutomatedReasonsList);
+            addDropdownOptions('not-automated-reasons-dropdown', [otherReason]);
             addDropdownOptions('partially-automated-reasons-dropdown', partiallyAutomatedReasonsList);
+            addDropdownOptions('partially-automated-reasons-dropdown', [otherReason]);
+            addDropdownOptions('reasons-of-delaying-dropdown', reasonsOfDelayList);
+            addDropdownOptions('reasons-of-delaying-dropdown', [otherReason]);
             for (var tester in testersList) {
                 addRemovingButtonsForReviewer(tester);
             }
@@ -28,6 +34,8 @@ async function placePopup() {
             $('#add-dates-info-button').click(() => addDatesInfoButtonHandler())
             setTabButtonActiveColor("add-dates-info-button");
             $('#add-automation-info-button').click(() => automationButtonHandler());
+            $('#reason-of-delaying-block-submit-button').click(() => reasonsOfDelayingBlockSubmitButtonHandler());
+            $('#reason-of-delaying-block-cancel-button').click(() => reasonsOfDelayingBlockCancelButtonHandler());
             $('#problems-block-submit-button').click(() => addProblemsInfoSubmitButtonHandler());
             $('#problems-block-cancel-button').click(() => addProblemsInfoCancelButtonHandler());
             $('#automation-submit-button').click(() => automationSubmitButtonHandler());
@@ -176,15 +184,15 @@ function hidePopup() {
     $("#ext-popup").hide();
 }
 
-async function showEndOfTestingConfirmationButtons(cardIdPromise, commentText) {
+async function showEndOfTestingConfirmationButtons(cardIdPromise, commentText, dateTime) {
     $('#confirm-message').text('Тестирование завершено? Все участники задачи добавлены в карточку? Все ревьюеры отмечены? Указаны данные по автоматизации?');
-    $('#comment-editing-save-button').unbind().click(() => endOfTestingConfirmButtonHandler(cardIdPromise, commentText));
+    $('#comment-editing-save-button').unbind().click(() => endOfTestingConfirmButtonHandler(cardIdPromise, commentText,dateTime));
     showFirstAndHideSecondBlock('edit-comment-confirmation-block', 'save-comment-block');
 }
 
-async function showEditingConfirmationButtons(commentInfo, newText) {
+async function showEditingConfirmationButtons(commentInfo, newText, newDate) {
     $('#confirm-message').text('Сохранить новое значение?');
-    $('#comment-editing-save-button').unbind().click(() => commentEditingSaveButtonHandler(commentInfo, newText));
+    $('#comment-editing-save-button').unbind().click(() => commentEditingSaveButtonHandler(commentInfo, newText,newDate));
     showFirstAndHideSecondBlock('edit-comment-confirmation-block', 'save-comment-block');
 }
 

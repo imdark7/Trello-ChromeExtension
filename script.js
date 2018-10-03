@@ -15,6 +15,7 @@ setInterval(async function () {
             automationTypesList = await getChecklistItems(automationInfoListId);
             notAutomatedReasonsList = await getChecklistItems(notAutomatedReasonsListId);
             partiallyAutomatedReasonsList = await getChecklistItems(partiallyAutomatedReasonsListId);
+            reasonsOfDelayList = await getChecklistItems(reasonsOfDelayListId);
             await placePopup();
         };
         placeLinks(windowSidebar);

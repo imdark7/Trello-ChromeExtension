@@ -1,111 +1,124 @@
 <div id="ext-popup" style="display: none; min-width:370px; overflow: scroll">
-    <div id="ext-popup-container" class="pop-over is-shown" style="min-width:370px;">
-        <div class="pop-over-header js-pop-over-header" style="min-width:370px;">
-            <span class="pop-over-header-title">Проблеморешатель 3.0</span>
-            <a id="ext-popup-close" href="javascript:void(0);" class="pop-over-header-close-btn icon-sm icon-close"></a>
-        </div>
-        <div class="pop-over-content js-pop-over-content u-fancy-scrollbar js-tab-parent" style="max-height: 418px;">
-            <div id="tabs-block"">
-		<a title="Дата и время" id="add-dates-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-		<a title="Ревьюеры"id="add-reviewers-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-		<a title="Редактирование участников" id="edit-members-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-		<a title="Проблемы с тестовыми стендами" id="add-test-stands-problem-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
-		<a title="Автоматизация" id="add-automation-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>     
-            </div>
-            <div id='testing-dates-input-block' style="width:95%;border-bottom: 1px solid #d6dadc">
-                <div>
+        <div id="ext-popup-container" class="pop-over is-shown" style="min-width:370px;">
+           <div class="pop-over-header js-pop-over-header" style="min-width:370px;">
+              <span class="pop-over-header-title">Проблеморешатель 3.0</span>
+              <a id="ext-popup-close" href="javascript:void(0);" class="pop-over-header-close-btn icon-sm icon-close"></a>
+           </div>
+           <div class="pop-over-content js-pop-over-content u-fancy-scrollbar js-tab-parent" style="max-height: 418px;">
+              <div id="tabs-block">
+                 <a title="Дата и время" id="add-dates-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+                 <a title="Ревьюеры"id="add-reviewers-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+                 <a title="Редактирование участников" id="edit-members-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+                 <a title="Проблемы с тестовыми стендами" id="add-test-stands-problem-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>
+                 <a title="Автоматизация" id="add-automation-info-button" class="button-link" style="min-height:40px;width:19%;display:inline-block"></a>     
+              </div>
+              <div id='testing-dates-block' style="width:95%;border-bottom: 1px solid #d6dadc">
+                 <div id='testing-dates-input-block'>
                     <form class="dpicker-widget u-clearfix">
-                        <div class="datepicker-select u-clearfix">
-                            <div class="datepicker-select-date" style='width:auto'>
-                                <label class="datepicker-select-label">Дата и Время</label><input id="date-time-input" class="datepicker-select-input js-dpicker-date-input js-autofocus" type="datetime-local">
-                            </div>
-                        </div>
+                       <div class="datepicker-select u-clearfix">
+                          <div class="datepicker-select-date" style='width:auto'>
+                             <label class="datepicker-select-label">Дата и Время</label><input id="date-time-input" class="datepicker-select-input js-dpicker-date-input js-autofocus" type="datetime-local">
+                          </div>
+                       </div>
                     </form>
                     <span>
-                        <select id="events-dropdown" class="js-checklist">
-                        </select>
-                    </span>
+                    <select id="events-dropdown" class="js-checklist">
+                    </select>
+                    </span>              
+                    <div id="save-comment-block" style="display:inline; min-height:112px;">
+                       <input id="ext-popup-submit" style="min-width:99%;" class="primary wide confirm" type="submit" value="Сохранить">
+                       <div id="error-message" style="font-weight: bold; color:red; margin: 10px;"></div>
+                    </div>
+                    <div id="edit-comment-confirmation-block" style="min-height:80px;display:none;">
+                       <div id="confirm-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
+                       <input id="comment-editing-save-button" class="primary wide confirm" type="submit" value="Подтвердить">
+                       <input id="comment-editing-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Отмена">
+                    </div>
+                 </div>
+                 <div id="reasons-of-delaying-block" style="display:none" >
+                    <div id="existing-reasons-of-delaying-block">
+                       <label class="datepicker-select-label">Причичны задержки: </label>
+                       <select id="reasons-of-delaying-dropdown" class="js-checklist">   
+                       </select>
+                    </div>
+                    <div id="add-new-reason-of-delaying-block" style="display:none;">
+                       <label for="new-reason-of-delaying-input" class="datepicker-select-label">Введите краткое описание причины задержки: </label>
+                       <input id="new-reason-of-delaying-input" style="background-color:white" type="text" dir="auto">
+                    </div>
+                    <input id="reason-of-delaying-block-submit-button" style="width:48%;margin-bottom: 10px" class="primary wide confirm" type="submit" value="Продолжить"><input id="reason-of-delaying-block-cancel-button" class="primary wide confirm" type="submit" style="width:48%; background:red" value="Назад">    
+                    <div id="reason-of-delaying-block-error-message" style="font-weight: bold; color:red; margin: 10px"></div>
                 </div>
-                <div id="save-comment-block" style="display:inline; min-height:112px;">
-                    <input id="ext-popup-submit" style="min-width:99%;" class="primary wide confirm" type="submit" value="Сохранить">
-                    <div id="error-message" style="font-weight: bold; color:red; margin: 10px;"></div>
-                </div>
-                <div id="edit-comment-confirmation-block" style="min-height:80px;display:none;">
-                    <div id="confirm-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
-                    <input id="comment-editing-save-button" class="primary wide confirm" type="submit" value="Подтвердить">
-                    <input id="comment-editing-cancel-button" class="primary wide confirm" type="submit" style="background:red" value="Отмена">
-                </div>
-            </div>
-            <div id="check-list-review-block" style="width:95%; display:none;border-bottom: 1px solid #d6dadc">
-                <div>
+              </div>
+              <div id="check-list-review-block" style="width:95%; display:none;border-bottom: 1px solid #d6dadc">
+                 <div>
                     <label class="datepicker-select-label">Ревьюер:</label>
                     <select id="testing-reviewers-dropdown" class="js-checklist">
                     </select>
                     <div style="display: inline-block; min-width:95%px;">
-                        <input id="add-reviewer-submit-button" style="min-width:100%px;display:inline;" class="primary wide confirm" type="submit" value="Добавить">
-                        <div id="reviewers-error-message" style="font-weight: bold; color:red; margin: 10px"></div>
+                       <input id="add-reviewer-submit-button" style="min-width:100%px;display:inline;" class="primary wide confirm" type="submit" value="Добавить">
+                       <div id="reviewers-error-message" style="font-weight: bold; color:red; margin: 10px"></div>
                     </div>
-                </div>
-                <div id='current-reviewers-block' style="width:95%px;">
-                </div>
-            </div>
-            <div id="automation-block" style="width:95%;display:none; border-bottom: 1px solid #d6dadc">
-                <div id="automation-info" style="display:none;">
+                 </div>
+                 <div id='current-reviewers-block' style="width:95%px;">
+                 </div>
+              </div>
+              <div id="automation-block" style="width:95%;display:none; border-bottom: 1px solid #d6dadc">
+                 <div id="automation-info" style="display:none;">
                     <label class="datepicker-select-label">Автоматизация задачи: </label>
                     <select id="automation-dropdown" class="js-checklist">
                     </select>
-                </div>
-                <div id="not-automated-info" style="display:none;">
+                 </div>
+                 <div id="not-automated-info" style="display:none;">
                     <label class="datepicker-select-label">Причичны недостаточной автоматизации: </label>
                     <select id="not-automated-reasons-dropdown" class="js-checklist">
                     </select>
-                </div>
-                <div id="partially-automated-info" style="display:none;">
+                 </div>
+                 <div id="partially-automated-info" style="display:none;">
                     <label class="datepicker-select-label">Причичны недостаточной автоматизации: </label>
                     <select id="partially-automated-reasons-dropdown" class="js-checklist">
                     </select>
-                </div>
-                <div id="add-new-reason-block" style="display:none;">
+                 </div>
+                 <div id="add-new-reason-block" style="display:none;">
                     <label for="new-reason-input" class="datepicker-select-label">Введите краткое описание причины неполной автоматизации: </label>
                     <input id="new-reason-input" style="background-color:white" type="text" dir="auto">
-                </div>
-                <div id="new-lack-of-automation-reason-error-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
-                <div style="display: inline-block; width:100%">
+                 </div>
+                 <div id="new-lack-of-automation-reason-error-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
+                 <div style="display: inline-block; width:100%">
                     <input id="automation-submit-button" style="width:48%;margin-bottom: 10px" class="primary wide confirm" type="submit" value="Продолжить"><input id="automation-cancel-button" class="primary wide confirm" type="submit" style="width:48%; background:red" value="Назад">
-                </div>
-            </div>
-            <div id="problems-block" style="width:95%;display: none; border-bottom: 1px solid #d6dadc">
-                <label for="test-stands-dropdown" class="datepicker-select-label">Тестовый стенд: </label>
-                <select id="test-stands-dropdown" class="js-checklist">
-                </select>
-                <div id="fill-problems-info-block">
+                 </div>
+              </div>
+              <div id="problems-block" style="width:95%;display: none; border-bottom: 1px solid #d6dadc">
+                 <label for="test-stands-dropdown" class="datepicker-select-label">Тестовый стенд: </label>
+                 <select id="test-stands-dropdown" class="js-checklist">
+                 </select>
+                 <div id="fill-problems-info-block">
                     <label class="datepicker-select-label">Проблемы по задаче: </label>
                     <select id="problems-dropdown" class="js-checklist">
                     </select>
-                </div>
-                <div id="add-new-problem-block" style="display:none;">
+                 </div>
+                 <div id="add-new-problem-block" style="display:none;">
                     <label for="new-problem-input" class="datepicker-select-label">Введите краткое описание проблемы: </label>
                     <input id="new-problem-input" style="background-color:white" type="text" dir="auto">
-                </div>
-                <label for="problem-comment-input" class="datepicker-select-label">Комментарий по проблеме: </label>
-                <input id="problem-comment-input" style="background-color:white" type="text" dir="auto">
-                <div id="new-problem-error-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
-                <div style="display: inline-block; width:100%;">
+                 </div>
+                 <label for="problem-comment-input" class="datepicker-select-label">Комментарий по проблеме: </label>
+                 <input id="problem-comment-input" style="background-color:white" type="text" dir="auto">
+                 <div id="new-problem-error-message" style="font-weight: bold; color:red; margin-bottom: 5px"></div>
+                 <div style="display: inline-block; width:100%;">
                     <input id="problems-block-submit-button" style="width:48%;margin-bottom: 10px" class="primary wide confirm" type="submit" value="Продолжить"><input id="problems-block-cancel-button" class="primary wide confirm" type="submit" style="width:48%; background:red" value="Назад">
-                </div>
-                <span id="existing-problems-block-header" class="pop-over-header-title" align="center" style="width:100%">Текущие пробелмы</span>
-                <div id='existing-problems-block' style="width:100%; min-height:20px;">
-                </div>
-            </div>
-            <div id="card-members-edit-block" style="width:100%;display: none; border-bottom: 1px solid #d6dadc">
-                <input id="pull-members-from-card" style="width:100%; display:inline;" class="primary wide confirm" type="submit" value="Подтянуть участников из карточки">
-                <span id="current-members-block-header" class="pop-over-header-title" align="center" style="width:100%">Текущие участники</span>
-                <div id='current-members-block' style="width:100%; min-height:20px;">
-                </div>
-            </div>
-            <div id='existingCommentsBlock' style="width:100%;">
-                <span class="pop-over-header-title" align="center">Сводка</span>
-            </div>
+                 </div>
+                 <span id="existing-problems-block-header" class="pop-over-header-title" align="center" style="width:100%">Текущие пробелмы</span>
+                 <div id='existing-problems-block' style="width:100%; min-height:20px;">
+                 </div>
+              </div>
+              <div id="card-members-edit-block" style="width:100%;display: none; border-bottom: 1px solid #d6dadc">
+                 <input id="pull-members-from-card" style="width:100%; display:inline;" class="primary wide confirm" type="submit" value="Подтянуть участников из карточки">
+                 <span id="current-members-block-header" class="pop-over-header-title" align="center" style="width:100%">Текущие участники</span>
+                 <div id='current-members-block' style="width:100%; min-height:20px;">
+                 </div>
+              </div>
+              <div id='existingCommentsBlock' style="width:100%;">
+                 <span class="pop-over-header-title" align="center">Сводка</span>
+              </div>
+           </div>
         </div>
-    </div>
-</div>
+     </div>

@@ -7,7 +7,7 @@ var eventsDictionary = {
 
 var tabsIds=[
 		'check-list-review-block',
-		'testing-dates-input-block',
+		'testing-dates-block',
 		'problems-block',
 		'automation-block',
 		'card-members-edit-block'
@@ -30,10 +30,13 @@ var buttonsIds=[
     'automation-cancel-button',
     'problems-block-submit-button',
     'problems-block-cancel-button',
-    'pull-members-from-card'
+    'pull-members-from-card',
+    'reason-of-delaying-block-submit-button',
+    'reason-of-delaying-block-cancel-button'
 	]
 
 var additionalCommentsDictionary = {
+    reasonOfDelay: "Причина задержки",
     reviewComment: "Ревью",
     members: "Участники",
     automationComment: "Автоматизация",
