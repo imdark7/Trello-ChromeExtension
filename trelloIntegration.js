@@ -97,7 +97,6 @@ async function getCardAndBoardNames(cardId) {
     return names;
 }
 async function createCardOnServiceBoard() {
-    var cardId = document.URL.split("/")[4];
     var cardDesc = await getCardAndBoardNames(cardId);
     var options = {
         method: "POST"
@@ -117,7 +116,6 @@ async function createCardOnServiceBoard() {
 }
 
 async function findServiceCard() {
-    var cardId = document.URL.split("/")[4];
     var options = {
         method: "GET"
     };
@@ -136,7 +134,6 @@ async function findServiceCard() {
 }
 
 async function getCardBugAmount() {
-    var cardId = document.URL.split("/")[4];
     var options = {
         method: "GET"
     }
@@ -152,7 +149,6 @@ async function getCardBugAmount() {
 }
 
 async function getCardMembersString() {
-    var cardId = document.URL.split("/")[4];
     var options = {
         method: "GET"
     }

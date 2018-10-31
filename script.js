@@ -1,26 +1,27 @@
 ﻿var target = document.getElementById('board');
 var card = document.getElementsByClassName('card-detail-window')[0];
-var flag = true
+var buttonPlacementProgress = false;
 var timeCounterСheckCardsStatus = 0;
 var statusCards =  getAllServiceCardName();
+var cardId;
 
 setInterval(async function () {
-    if (flag && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
-        flag = false;
+    if (!buttonPlacementProgress && document.querySelector(".window-sidebar") && !document.getElementById('testing-popup-button')) {
+        buttonPlacementProgress = true;
         var windowSidebar = $('.window-sidebar').first();
-
+        cardId = document.URL.split("/")[4];
+        testersList = await getTestersList();
+        testStandProblemsList = await getChecklistItems(testStandProblemsListId);
+        automationTypesList = await getChecklistItems(automationInfoListId);
+        notAutomatedReasonsList = await getChecklistItems(notAutomatedReasonsListId);
+        partiallyAutomatedReasonsList = await getChecklistItems(partiallyAutomatedReasonsListId);
+        reasonsOfDelayList = await getChecklistItems(reasonsOfDelayListId);
         if (!document.getElementById('ext-popup-container')) {
-            testersList = await getTestersList();
-            testStandProblemsList = await getChecklistItems(testStandProblemsListId);
-            automationTypesList = await getChecklistItems(automationInfoListId);
-            notAutomatedReasonsList = await getChecklistItems(notAutomatedReasonsListId);
-            partiallyAutomatedReasonsList = await getChecklistItems(partiallyAutomatedReasonsListId);
-            reasonsOfDelayList = await getChecklistItems(reasonsOfDelayListId);
             await placePopup();
         };
         placeLinks(windowSidebar);
         refreshPopup(true);
-        flag = true;
+        buttonPlacementProgress = false;
     }
 }, 850); //todo переписать на отлов событий
 
